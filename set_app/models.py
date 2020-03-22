@@ -16,4 +16,5 @@ class UserProfileInfo(models.Model):
 	melli_code = models.CharField(max_length=10,blank=False,default="XXXXXXXXXX")
 
 	def __str__(self):
+		print("test:")
 		return self.user.username
