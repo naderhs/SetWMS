@@ -20,9 +20,6 @@
             <li>
                 <a class="navbar-link" href="{% url 'set_app:register' %}">Register</a>
             </li>
-            <li>
-                <a class="navbar-link" href="{% url 'set_app:warehouse_page' %}">Warehouse</a>
-            </li>
             {% if user.is_authenticated %}
                 <li>
                     <a class="navbar-link" href="{% url 'logout' %}">Logout</a>
