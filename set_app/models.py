@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
+
+
 
 
 # Create your models here.
@@ -18,3 +21,52 @@ class UserProfileInfo(models.Model):
 	def __str__(self):
 		print("test:")
 		return self.user.username
+
+
+class Warehouse(models.Model):
+	name = models.CharField(max_length=256,default="warehouse name")
+	tel1 = models.CharField(max_length=256,default="XXXXXXXX")
+	tel2 = models.CharField(max_length=256,default="XXXXXXXX")
+	email = models.EmailField()
+	address = models.CharField(max_length=512,default="address")
+	postcode = models.CharField(max_length=10,default="XXXXXXXXXX")
+
+	def __str__(self):
+		return self.name + "\n" + self.tel1 + " / " + self.tel2 + " / " + self.email + "\n" + self.address + " " + self.postcode
+
+	def get_absolute_url(self):
+		return reverse("set_app:warehouse_detail",kwargs={'pk':self.pk})
+
+
+class Customer(models.Model):
+	INDIVIDUAL = 'IN'
+	COMPANY = 'CO'
+	OTHER = 'OT'
+
+	ENTITY_TYPE_CHOICES = [
+		(INDIVIDUAL, 'Individual'),
+		(COMPANY, 'Company'),
+		(OTHER, 'Other'),
+	]
+	entity_type = models.CharField(
+		max_length=2,
+		choices=ENTITY_TYPE_CHOICES,
+		default=INDIVIDUAL,
+	)
+	first_name = models.CharField(max_length=256,default="first name")
+	last_name = models.CharField(max_length=256,default="last name")
+	company_name = models.CharField(max_length=256,default="company name")
+	tel1 = models.CharField(max_length=256, default="XXXXXXXX")
+	tel2 = models.CharField(max_length=256, default="XXXXXXXX")
+	email = models.EmailField()
+	address = models.CharField(max_length=512,default="address")
+	postcode = models.CharField(max_length=10,default="XXXXXXXXXX")
+	warehouse = models.ForeignKey(Warehouse,related_name='customers',on_delete=models.CASCADE)
+
+	def __str__(self):
+		if self.entity_type == self.INDIVIDUAL:
+			return self.entity_type + " - " + self.first_name + " " + self.last_name
+		elif self.entity_type == self.COMPANY:
+			return self.entity_type + " - " + self.company_name
+		else:
+			return "Customer __str__ ERROR!"
