@@ -4,16 +4,15 @@
 
     <h1>
         {% if not form.instance.pk %}
-            Create Warehouse
+            Create Product
         {% else %}
-            Update Warehouse
+            Update Product
         {% endif %}
     </h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ product_form.as_p }}
         <input type="submit" class="btn btn-primary" value="Submit">
-
     </form>
 
 {% endblock %}

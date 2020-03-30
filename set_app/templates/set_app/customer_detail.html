@@ -1,0 +1,29 @@
+{% extends "set_app/basic_app_base.html" %}
+
+{% block body_block %}
+    <div class="jumbotron">
+        <h1>Welcome to list of all customer detail</h1>
+        <h2>Customer details:</h2>
+        <p>Entity type: {{ customer_detail.entity_type }}</p>
+        <p>First name: {{ customer_detail.first_name }}</p>
+        <p>Last name: {{ customer_detail.last_name }}</p>
+        <p>Company name: {{ customer_detail.company_name }}</p>
+        <p>Tel 1: {{ customer_detail.tel1 }}</p>
+        <p>Tel 2: {{ customer_detail.tel2 }}</p>
+        <p>Email: {{ customer_detail.email }}</p>
+        <p>Address: {{ customer_detail.address }}</p>
+        <p>Postcode: {{ customer_detail.postcode }}</p>
+        <p>Warehouse: {{ customer_detail.warehouse }}</p>
+
+{% comment %}        <h3>Customers:</h3>
+    {% for customer in customer_detail.customers.all %}
+        <p>{{ customer.entity }} named {{ customer.first_name }} {{ customer.lasy_name }} {{ customer.company_name }}</p>
+    {% endfor %}{% endcomment %}
+    
+    </div>
+    <div class="container">
+        <p><a class="btn btn-warning" href="{% url 'set_app:customer_update' pk=customer_detail.pk %}">Update</a>
+        <a class="btn btn-danger" href="{% url 'set_app:customer_delete' pk=customer_detail.pk %}">Delete</a></p>
+    </div>
+
+{% endblock %}

@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+#from django.core.validators import valid
 
+from django.core.validators import RegexValidator
 
 
 
@@ -70,3 +72,18 @@ class Customer(models.Model):
 			return self.entity_type + " - " + self.company_name
 		else:
 			return "Customer __str__ ERROR!"
+
+class Product(models.Model):
+	numeric = RegexValidator(r'^[0-9]*$', 'Only anumeric characters are allowed.')
+
+	code= models.CharField(max_length=30,default="product code",blank=False, unique=True)
+	barcode = models.CharField(max_length=30,default=0,validators=[numeric])
+	name = models.CharField(max_length=128,default="product name",blank=False)
+	description = models.CharField(max_length=512, default="some description")
+	brand = models.CharField(max_length=128,default="product brand")
+
+	status_choices = (('OFF', 'Off - inactive'), ('ON', 'On - active'))
+	status = models.CharField(max_length=20, choices=status_choices, default='ON')
+
+	def __str__(self):
+		return self.code + " : " + self.name
