@@ -5,10 +5,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from set_app.forms import UserForm, UserProfileInfoForm, ProductForm
-from set_app import models
+from set_app.models import *
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect, get_object_or_404
-
+from set_app.filters import ProductFilter
 
 # Imports for PDF to work
 from io import BytesIO
@@ -20,6 +20,22 @@ from xhtml2pdf import pisa
 def index(request):
 	return render(request, 'set_app/index.html')
 
+# Dashboard view
+def dashboard(request):
+	customers = Customer.objects.all()
+	total_customers = customers.count()
+
+
+	orders = Order.objects.all()
+	total_orders = orders.count()
+
+	# Total customer, Total served last month, this month to today, last week, yesterday, today
+	# Total orders, Total served last month, this month to today, last week, yesterday, today
+	# Total units, Total units last month, this month to today, last week, yesterday, today
+
+
+	context = {'customers':customers,'orders':orders,'total_customers':total_customers,'total_orders':total_orders}
+	return render(request, 'set_app/dashboard.html', context)
 
 @login_required
 def user_logout(request):
@@ -83,63 +99,82 @@ def user_login(request):
 
 class WarehouseListView(ListView):
 	context_object_name = 'warehouses'
-	model = models.Warehouse
+	model = Warehouse
 
 class WarehouseDetailView(DetailView):
 	context_object_name = 'warehouse_detail'
-	model = models.Warehouse
+	model = Warehouse
 	template_name = 'set_app/warehouse_detail.html'
 
 class WarehouseCreateView(CreateView):
 	fields = ('name', 'tel1', 'tel2', 'email', 'address', 'postcode')
-	model = models.Warehouse
+	model = Warehouse
 
 class WarehouseUpdateView(UpdateView):
 	fields = ('name', 'tel1', 'tel2', 'email', 'address', 'postcode')
-	model = models.Warehouse
+	model = Warehouse
 
 class WarehouseDeleteView(DeleteView):
-	model = models.Warehouse
+	model = Warehouse
 	success_url = reverse_lazy("set_app:warehouse_list")
 
 
 # Customer Views
 class CustomerListView(ListView):
-	context_object_name = 'customers'
-	model = models.Customer
+	context_object_name = 'customer'
+	model = Customer
+
+def CustomerListView2(request, pk):
+	customer = Customer.objects.get(id=pk)
+	order = customer.order_set.all()
+	context = {'customer':customer, 'order':order}
+	return render(request, 'set_app/customer_list.html', context)
 
 class CustomerDetailView(DetailView):
 	context_object_name = 'customer_detail'
-	model = models.Customer
+	model = Customer
 	template_name = 'set_app/customer_detail.html'
 
 class CustomerCreateView(CreateView):
 	fields = ('entity_type', 'first_name', 'last_name', 'company_name', 'tel1', 'tel2', 'email', 'address', 'postcode', 'warehouse')
-	model = models.Customer
+	model = Customer
 	success_url = reverse_lazy("set_app:customer_list")
 
 class CustomerUpdateView(UpdateView):
 	fields = ('entity_type', 'first_name', 'last_name', 'company_name', 'tel1', 'tel2', 'email', 'address', 'postcode', 'warehouse')
-	model = models.Customer
+	model = Customer
 	success_url = reverse_lazy("set_app:customer_list")
 
 class CustomerDeleteView(DeleteView):
-	model = models.Customer
+	model = Customer
 	success_url = reverse_lazy("set_app:customer_list")
 
 # Product Views
-class ProductListView(ListView):
-	context_object_name = 'products'
-	model = models.Product
 
-	def get_context_data(self, **kwargs):
-		context = super(ProductListView, self).get_context_data(**kwargs)
-		context['header'] = 'all products'
-		context['items'] = models.Product.objects.all()
-		return context
+
+# class ProductListView(ListView):
+# 	context_object_name = 'items'
+# 	model = Product
+#
+# 	def get_context_data(self, **kwargs):
+# 		context = super(ProductListView, self).get_context_data(**kwargs)
+# 		context['header'] = 'all products'
+# 		items = Product.objects.all()
+# 		context['items'] = items
+# 		return context
+#
+# 	def get_queryset(self):
+# 		qs = self.model.objects.all()
+# 		product_filtered_list = ProductFilter(self.request.GET, queryset=qs)
+# 		return product_filtered_list.qs
+
+def ProductListView(request):
+	products = Product.objects.all()
+	return render(request, 'set_app/product_list.html',{'items':products, 'header':'all products'})
+
 
 def ActiveProductsView(request):
-	items = models.Product.objects.filter(status='ON')
+	items = Product.objects.filter(status='ON')
 	context = {
 		'items': items,
 		'header': 'active products'
@@ -157,7 +192,7 @@ def ProductCreateView(request):
 	return render(request, 'set_app/product_form.html', {'product_form':product_form})
 
 def ProductUpdateView(request, pk):
-	item = get_object_or_404(models.Product, pk=pk)
+	item = get_object_or_404(Product, pk=pk)
 	if request.method == 'POST':
 		product_form = ProductForm(request.POST, instance=item)
 		if product_form.is_valid():
@@ -168,12 +203,28 @@ def ProductUpdateView(request, pk):
 	return render(request, 'set_app/product_form.html', {'product_form':product_form})
 
 def ProductDeleteView(request, pk):
-	models.Product.objects.filter(id=pk).delete()
-	items = models.Product.objects.all()
+	Product.objects.filter(id=pk).delete()
+	items = Product.objects.all()
 	context = {
 		'items':items
 	}
 	return redirect('set_app:product_list')
+
+
+# Driver
+# def DriverListView(request):
+# 	drivers = Product.objects.all()
+# 	return render(request, 'set_app/product_list.html',{'items':products, 'header':'all products'})
+
+class DriverCreateView(CreateView):
+	fields = ('melli_code','first_name','last_name','transport_company','driver_code','tel1','number_plate_1','number_plate_letter','number_plate_2','number_plate_iran','truck_size')
+	model = Driver
+	success_url = reverse_lazy("set_app:driver_create")
+
+
+
+
+
 
 
 # PDF code stats here

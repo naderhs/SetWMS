@@ -1,5 +1,5 @@
 from django.contrib import admin
-from set_app.models import UserProfileInfo, Warehouse, Customer, Product
+from set_app.models import *
 from import_export.admin import ImportExportModelAdmin
 
 # Register your models here.
@@ -17,5 +17,12 @@ admin.site.register(UserProfileInfo)
 admin.site.register(Warehouse, WarehouseAdmin)
 admin.site.register(Customer)
 admin.site.register(Product, ProductAdmin)
+admin.site.register(Order)
+admin.site.register(Transaction)
+admin.site.register(StorageTag)
+admin.site.register(Driver)
+
+
+
 
 

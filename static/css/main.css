@@ -1,0 +1,26 @@
+#logo {
+}
+
+body {
+    background-color: #ebeff5;
+}
+
+#total-customers {
+    background-color: #4cb4c7;
+}
+
+#total-orders {
+    background-color: #7abecc;
+}
+
+#total-transactions {
+    background-color: #7CD1C0;
+}
+
+#total-units-in {
+    background-color: #7abecc;
+}
+
+#total-units-out {
+    background-color: #4cb4c7;
+}

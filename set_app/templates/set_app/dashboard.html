@@ -1,0 +1,83 @@
+{% extends 'set_app/set_app_base.html' %}
+
+{% block body_block %}
+
+    {% include 'set_app/status.html' %}
+
+    <br>
+
+    <div class="row">
+        <div class="col-md-5">
+            <h5>CUSTOMERS:</h5>
+            <hr>
+            <div class="card card-body">
+                <a class="btn btn-primary  btn-sm btn-block" href="{% url 'set_app:customer_create' %}">Create Customer</a>
+                <table class="table table-sm">
+                    <tr>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Entity type</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Warehouse</th>
+                    </tr>
+                    </tr>
+                    <tbody>
+                    {% for customer in customers %}
+                        <tr>
+                            <td scope="row">{{ forloop.counter }}</td>
+                            <td>{{ customer.entity_type }}</td>
+                            {% if customer.entity_type == "IN" %}
+                                <td><a href={% url 'set_app:customer_detail' pk=customer.pk %}>{{ customer.first_name }} {{ customer.last_name }}</a></td>
+                            {% else %}
+                                <td><a href={% url 'set_app:customer_detail' pk=customer.pk %}>{{ customer.company_name }}</a></td>
+                            {% endif %}
+                            <td><a href={% url 'set_app:warehouse_detail' pk=customer.warehouse.pk %}>{{ customer.warehouse.name }}</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <h5>LAST 5 ORDERS</h5>
+            <hr>
+            <div class="card card-body">
+                <a class="btn btn-primary  btn-sm btn-block" href="">Create Order</a>
+                <table class="table table-sm">
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Warehouse</th>
+                        <th>Customer</th>
+                        <th>Permit</th>
+                        <th>Timestamp</th>
+                    </tr>
+                    <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.order_type }}</td>
+                            <td>{{ order.warehouse }}</td>
+                            <td>{{ order.customer }}</td>
+                            <td>{{ order.permit_type }}:{{ order.permit_number }}</td>
+                            <td>{{ order.timestamp_created|date:"d/m/y H:i" }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{#	order_type#}
+{#	warehouse#}
+{#	customer#}
+{#	permit_type = models.CharField(max_length=10, choices=permit_choices, default='ON', null=False)#}
+{#	permit_number = models.CharField(max_length=30, default="product code", blank=False, unique=False, null=True)#}
+{#	status_choices = (('OFF', 'Off - inactive'), ('ON', 'On - active'))#}
+{#	status = models.CharField(max_length=20, choices=status_choices, default='ON')#}
+{#	timestamp_created = models.DateTimeField(auto_now_add=True, null=False)#}

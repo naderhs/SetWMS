@@ -1,8 +1,57 @@
-{% extends "set_app/basic_app_base.html" %}
+{% extends "set_app/set_app_base.html" %}
 
 {% block body_block %}
 
+    <br>
+
     <h1>Welcome to list of all customers</h1>
+
+    <br>
+
+    <div class="row">
+        <div class="col-md">
+            <div class="card card-body">
+                <h5>Customer:</h5>
+                <hr>
+                <a class="btn btn-outline-info  btn-sm btn-block" href="">Update Customer</a>
+                <a class="btn btn-outline-danger  btn-sm btn-block" href="">Delete Customer</a>
+
+            </div>
+        </div>
+
+        <div class="col-md">
+            <div class="card card-body">
+                <h5>Contact Information</h5>
+                <hr>
+                <p>Email: </p>
+                <p>Phone: </p>
+            </div>
+        </div>
+
+        <div class="col-md">
+            <div class="card card-body">
+                <h5>Total Orders</h5>
+                <hr>
+                <h1 style="text-align: center;padding: 10px"></h1>
+            </div>
+        </div>
+    </div>
+
+
+    <br>
+    <div class="row">
+        <div class="col">
+            <div class="card card-body">
+                <form method="get">
+
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <br>
+
 
     <table class="table table-striped">
         <thead>
@@ -18,6 +67,7 @@
             <th scope="col">Address</th>
             <th scope="col">Postcode</th>
             <th scope="col">Warehouse</th>
+            <th scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -35,9 +85,9 @@
                 <td>{{ customer.postcode }}</td>
                 <td>{{ customer.warehouse.name }}</td>
                 <td>
-                 <a href="{% url 'set_app:customer_update' pk=customer.pk %}" class="btn btn-warning btn-sm"
+                    <a href="{% url 'set_app:customer_update' pk=customer.pk %}" class="btn btn-warning btn-sm"
                        role="button">Edit</a>
-                <a href="{% url 'set_app:customer_detail' pk=customer.pk %}" class="btn btn-danger btn-sm"
+                    <a href="{% url 'set_app:customer_detail' pk=customer.pk %}" class="btn btn-danger btn-sm"
                        role="button">X</a>
                 </td>
             </tr>
@@ -45,27 +95,27 @@
         </tbody>
     </table>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-md"></div>
+    {#	<div class="container">#}
+    {#		<div class="row">#}
+    {#			<div class="col-md"></div>#}
+    {##}
+    {#			<div class="col-md">#}
+    {#				<div class="card card-body">#}
+    {#					 <div class="text-center">#}
+    {#					<h3>View Invoices or download directly to PDF</h3>#}
+    {#					<p>Turn HTML templates into PDF's with Django + XHTML 2 PDF. This example gives you the option of  <br> view a template as a PDF or Downloading directly.</p>#}
+    {#					<a class="btn btn-info" href="{% url 'set_app:customer_pdf_view' %}" target="_blank">View Invoice</a>#}
+    {#					<a class="btn btn-info"  href="{% url 'set_app:customer_pdf_download' %}">Download Invoice</a>#}
+    {#					</div>#}
+    {#				</div>#}
+    {#			</div>#}
+    {##}
+    {#			<div class="col-md"></div>#}
+    {#		</div>#}
+    {#	</div>#}
 
-			<div class="col-md">
-				<div class="card card-body">
-					 <div class="text-center">
-					<h3>View Invoices or download directly to PDF</h3>
-					<p>Turn HTML templates into PDF's with Django + XHTML 2 PDF. This example gives you the option of  <br> view a template as a PDF or Downloading directly.</p>
-					<a class="btn btn-info" href="{% url 'set_app:customer_pdf_view' %}" target="_blank">View Invoice</a>
-					<a class="btn btn-info"  href="{% url 'set_app:customer_pdf_download' %}">Download Invoice</a>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md"></div>
-		</div>
-	</div>
 
 
-
-</html>
+    </html>
 
 {% endblock %}
