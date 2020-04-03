@@ -119,34 +119,6 @@ class Product(models.Model):
 	def __str__(self):
 		return self.code + " : " + self.name
 
-
-class Order(models.Model):
-	order_choices = (('IN', 'Inbound'), ('OU', 'Outbound'), ('TR', 'Transfer '))
-	order_type = models.CharField(max_length=10, choices=order_choices, default='ON', null=False)
-	warehouse = models.ForeignKey(Warehouse, on_delete=models.SET_NULL, null=True, default=DEFAULT_WH_ID)
-	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
-	permit_choices = (('PAP', 'Paper'), ('FAX', 'Fax'), ('EMA', 'Email'), ('TEL', 'Telephone'))
-	permit_type = models.CharField(max_length=10, choices=permit_choices, default='ON', null=False)
-	permit_number = models.CharField(max_length=30, default="product code", blank=False, unique=False, null=True)
-	notes = models.TextField(max_length=2048, default="some notes", blank=True)
-	status_choices = (('OFF', 'Off - inactive'), ('ON', 'On - active'))
-	status = models.CharField(max_length=20, choices=status_choices, default='ON')
-	timestamp_created = models.DateTimeField(auto_now_add=True)
-
-	def __str__(self):
-		return self.order_type + " : " + self.customer.__str__() + " : " + self.status + " <" + self.timestamp_created.__str__() + ">"
-
-
-class Transaction(models.Model):
-	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
-	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
-	count = models.IntegerField(default=0, null=False)
-	timestamp_created = models.DateTimeField(auto_now_add=True)
-
-	def __str__(self):
-		return self.order.__str__() + " : " + self.product.__str__() + " <" + self.count.__str__() + ">"
-
-
 class Driver(models.Model):
 	melli_code = models.CharField(max_length=10, default=0, validators=[NUMERIC])
 	first_name = models.CharField(max_length=256, default="first name", blank=True)
@@ -182,15 +154,41 @@ class Driver(models.Model):
 
 	def clean(self):
 		super().clean()
-		print('----------- 1')
-		print(MelliCodeIsValid(self.melli_code))
-		print(not MelliCodeIsValid(self.melli_code))
 		if not MelliCodeIsValid(self.melli_code):
-			print('----------- 2')
 			raise ValidationError('Melli code is invalid!')
 
 	def __str__(self):
 		return self.first_name + " " + self.last_name
+
+
+class Order(models.Model):
+	order_choices = (('IN', 'Inbound'), ('OU', 'Outbound'), ('TR', 'Transfer '))
+	order_type = models.CharField(max_length=10, choices=order_choices, default='ON', null=False)
+	warehouse = models.ForeignKey(Warehouse, on_delete=models.SET_NULL, null=True, default=DEFAULT_WH_ID)
+	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+	driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True)
+	permit_choices = (('PAP', 'Paper'), ('FAX', 'Fax'), ('EMA', 'Email'), ('TEL', 'Telephone'))
+	permit_type = models.CharField(max_length=10, choices=permit_choices, default='ON', null=False)
+	permit_number = models.CharField(max_length=30, default="0", blank=False, unique=False, null=True)
+	notes = models.TextField(max_length=2048, default="some notes", blank=True)
+	status_choices = (('OFF', 'Off - inactive'), ('ON', 'On - active'))
+	status = models.CharField(max_length=20, choices=status_choices, default='ON')
+	timestamp_created = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return self.order_type + " : " + self.customer.__str__() + " : " + self.status + " <" + self.timestamp_created.__str__() + ">"
+
+
+class Transaction(models.Model):
+	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+	count = models.IntegerField(default=0, null=False)
+	timestamp_created = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return self.order.__str__() + " : " + self.product.__str__() + " <" + self.count.__str__() + ">"
+
+
 
 
 def MelliCodeIsValid(input):

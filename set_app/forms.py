@@ -8,13 +8,13 @@ class UserForm(forms.ModelForm):
 
 	class Meta():
 		model = User
-		fields = ('first_name', 'last_name', 'username', 'email', 'password')
+		fields = '__all__'
 
 
 class UserProfileInfoForm(forms.ModelForm):
 	class Meta():
 		model = models.UserProfileInfo
-		fields = ('mobile', 'melli_code')
+		fields = '__all__'
 
 
 class WarehouseForm(forms.Form):
@@ -26,8 +26,22 @@ class CustomerForm(forms.Form):
 	last_name = forms.CharField(max_length=30)
 	company_name = forms.CharField(max_length=30)
 
+class OrderForm(forms.ModelForm):
+	class Meta():
+		model = models.Order
+		fields = ['order_type', 'warehouse', 'customer','permit_type','permit_number','notes']
 
 class ProductForm(forms.ModelForm):
 	class Meta():
 		model = models.Product
-		fields = ('code', 'barcode', 'name', 'description', 'brand', 'status')
+		fields = '__all__'
+
+class TransactionForm(forms.ModelForm):
+	class Meta():
+		model = models.Transaction
+		fields = ['product', 'count']
+
+class DriverForm(forms.ModelForm):
+	class Meta():
+		model = models.Driver
+		fields = '__all__'

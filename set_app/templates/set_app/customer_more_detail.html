@@ -1,0 +1,179 @@
+{% extends "set_app/set_app_base.html" %}
+
+{% block body_block %}
+
+    <br>
+
+    <h1>Customer details</h1>
+
+    <br>
+
+    <div class="row">
+        <div class="col-md">
+            <div class="card card-body" style="height: 11rem;">
+                <h5>Customer: <span style="color:darkgoldenrod">{{ customer_name }}</span></h5>
+                <hr>
+                <a class="btn btn-outline-info btn-sm btn-block" href="{% url 'set_app:customer_update' pk=customer.id %}">Update Customer</a>
+                <a class="btn btn-outline-info btn-sm btn-block" href={% url 'set_app:order_create' pk=customer.id %}>Create Order</a>
+            </div>
+        </div>
+
+        <div class="col-md">
+            <div class="card card-body" style="height: 11rem;">
+                <h5>Contact Information</h5>
+                <hr>
+                <p>Email: <span style="color:darkgoldenrod;">{{ customer.email }}</span></p>
+                <p>Tel: <span style="color:darkgoldenrod;">{{ customer.tel1 }} - {{ customer.tel2 }}</span></p>
+            </div>
+        </div>
+
+        <div class="col-md">
+            <div class="card card-body" style="height: 11rem;">
+                <h5>Total Orders</h5>
+                <hr>
+                <h1 style="color:darkgoldenrod; text-align:center;">{{ total_orders }}</h1>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md">
+            <div class="card card-body" style="height: 11rem;">
+                <h5>Storage Tags</h5>
+                <hr>
+                <p style="color:darkgoldenrod;">
+                    {% for tag_name in customer.storage_tags.all %}
+                        [{{ tag_name }}]
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md">
+            <div class="card card-body" style="height: 11rem;">
+                <h5>Address</h5>
+                <hr>
+                <p style="color:darkgoldenrod;">{{ customer.address }}</p>
+                <p style="color:darkgoldenrod;">{{ customer.postcode }}</p>
+            </div>
+        </div>
+
+        <div class="col-md">
+            <div class="card card-body" style="height: 11rem;">
+                <h5>Other</h5>
+                <hr>
+                <p>Melli Code: <span style="color:darkgoldenrod;">{{ customer.melli_code }}</span></p>
+                <p>TS: <span style="color:darkgoldenrod;">{{ customer.timestamp_created }}</span></p>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <div class="row">
+        <div class="col">
+            <div class="card card-body">
+                <form method="get">
+
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <br>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">ID</th>
+            <th scope="col">Type</th>
+            <th scope="col">Permit Type</th>
+            <th scope="col">Permit #</th>
+            <th scope="col">Notes</th>
+            <th scope="col">Status</th>
+            <th scope="col">TS</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ order.id }}</td>
+                <td>{{ order.order_type }}</td>
+                <td>{{ order.permit_type }}</td>
+                <td>{{ order.permit_number }}</td>
+                <td>{{ order.notes }}</td>
+                <td>{{ order.status }}</td>
+                <td>{{ order.timestamp_created }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{#    <table class="table table-striped">#}
+{#        <thead>#}
+{#        <tr>#}
+{#            <th scope="col">#</th>#}
+{#            <th scope="col">Entity type</th>#}
+{#            <th scope="col">First name</th>#}
+{#            <th scope="col">Last name</th>#}
+{#            <th scope="col">Company name</th>#}
+{#            <th scope="col">Tel 1</th>#}
+{#            <th scope="col">Tel 2</th>#}
+{#            <th scope="col">Email</th>#}
+{#            <th scope="col">Address</th>#}
+{#            <th scope="col">Postcode</th>#}
+{#            <th scope="col">Warehouse</th>#}
+{#            <th scope="col">Action</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        {% for customer in customers %}#}
+{#            <tr>#}
+{#                <th scope="row">{{ forloop.counter }}</th>#}
+{#                <td>{{ customer.entity_type }}</td>#}
+{#                <td>{{ customer.first_name }}</td>#}
+{#                <td>{{ customer.last_name }}</td>#}
+{#                <td>{{ customer.company_name }}</td>#}
+{#                <td>{{ customer.tel1 }}</td>#}
+{#                <td>{{ customer.tel2 }}</td>#}
+{#                <td>{{ customer.email }}</td>#}
+{#                <td>{{ customer.address }}</td>#}
+{#                <td>{{ customer.postcode }}</td>#}
+{#                <td>{{ customer.warehouse.name }}</td>#}
+{#                <td>#}
+{#                    <a href="{% url 'set_app:customer_update' pk=customer.pk %}" class="btn btn-warning btn-sm"#}
+{#                       role="button">Edit</a>#}
+{#                    <a href="{% url 'set_app:customer_detail' pk=customer.pk %}" class="btn btn-danger btn-sm"#}
+{#                       role="button">X</a>#}
+{#                </td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#        </tbody>#}
+{#    </table>#}
+
+    {#	<div class="container">#}
+    {#		<div class="row">#}
+    {#			<div class="col-md"></div>#}
+    {##}
+    {#			<div class="col-md">#}
+    {#				<div class="card card-body">#}
+    {#					 <div class="text-center">#}
+    {#					<h3>View Invoices or download directly to PDF</h3>#}
+    {#					<p>Turn HTML templates into PDF's with Django + XHTML 2 PDF. This example gives you the option of  <br> view a template as a PDF or Downloading directly.</p>#}
+    {#					<a class="btn btn-info" href="{% url 'set_app:customer_pdf_view' %}" target="_blank">View Invoice</a>#}
+    {#					<a class="btn btn-info"  href="{% url 'set_app:customer_pdf_download' %}">Download Invoice</a>#}
+    {#					</div>#}
+    {#				</div>#}
+    {#			</div>#}
+    {##}
+    {#			<div class="col-md"></div>#}
+    {#		</div>#}
+    {#	</div>#}
+
+
+
+    </html>
+
+{% endblock %}

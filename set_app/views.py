@@ -4,11 +4,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from set_app.forms import UserForm, UserProfileInfoForm, ProductForm
+from set_app.forms import *
 from set_app.models import *
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect, get_object_or_404
 from set_app.filters import ProductFilter
+from django.forms import inlineformset_factory
 
 # Imports for PDF to work
 from io import BytesIO
@@ -124,11 +125,13 @@ class CustomerListView(ListView):
 	context_object_name = 'customer'
 	model = Customer
 
-def CustomerListView2(request, pk):
+def CustomerMorDetailView(request, pk):
 	customer = Customer.objects.get(id=pk)
-	order = customer.order_set.all()
-	context = {'customer':customer, 'order':order}
-	return render(request, 'set_app/customer_list.html', context)
+	orders = customer.order_set.all()
+	total_orders = orders.count()
+	customer_name = customer.__str__
+	context = {'customer':customer, 'orders':orders, 'total_orders':total_orders, 'customer_name':customer_name}
+	return render(request, 'set_app/customer_more_detail.html', context)
 
 class CustomerDetailView(DetailView):
 	context_object_name = 'customer_detail'
@@ -149,7 +152,33 @@ class CustomerDeleteView(DeleteView):
 	model = Customer
 	success_url = reverse_lazy("set_app:customer_list")
 
-# Product Views
+# Order Views
+
+def OrderCreateView(request, pk=-1):
+	if pk > 0:
+		customer = Customer.objects.get(id=pk)
+		order_form = OrderForm(initial={'customer': customer})
+	else:
+		order_form = OrderForm()
+
+	TransactionFormSet = inlineformset_factory(Order, Transaction, fields=['product', 'count'],extra=5)
+	formset = TransactionFormSet()
+
+	driver_form = DriverForm()
+	if request.method == 'POST':
+		order_form = OrderForm(request.POST)
+		driver_form = DriverForm(request.POST)
+		if order_form.is_valid()  and driver_form.is_valid():
+			driver = driver_form.save()
+			order = order_form.save(False)
+			order.driver=driver
+			order.save()
+			formset = TransactionFormSet(request.POST, instance=order)
+			if formset.is_valid():
+				formset.save()
+				return redirect('set_app:dashboard')
+	context = {'order_form':order_form, 'driver_form':driver_form, 'formset':formset}
+	return render(request, 'set_app/order_form.html', context)
 
 
 # class ProductListView(ListView):

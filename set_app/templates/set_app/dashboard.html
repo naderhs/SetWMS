@@ -27,9 +27,9 @@
                             <td scope="row">{{ forloop.counter }}</td>
                             <td>{{ customer.entity_type }}</td>
                             {% if customer.entity_type == "IN" %}
-                                <td><a href={% url 'set_app:customer_detail' pk=customer.pk %}>{{ customer.first_name }} {{ customer.last_name }}</a></td>
+                                <td><a href={% url 'set_app:customer_more_detail' pk=customer.pk %}>{{ customer.first_name }} {{ customer.last_name }}</a></td>
                             {% else %}
-                                <td><a href={% url 'set_app:customer_detail' pk=customer.pk %}>{{ customer.company_name }}</a></td>
+                                <td><a href={% url 'set_app:customer_more_detail' pk=customer.pk %}>{{ customer.company_name }}</a></td>
                             {% endif %}
                             <td><a href={% url 'set_app:warehouse_detail' pk=customer.warehouse.pk %}>{{ customer.warehouse.name }}</a></td>
                         </tr>
@@ -43,7 +43,7 @@
             <h5>LAST 5 ORDERS</h5>
             <hr>
             <div class="card card-body">
-                <a class="btn btn-primary  btn-sm btn-block" href="">Create Order</a>
+                <a class="btn btn-primary  btn-sm btn-block" href={% url 'set_app:order_create' %}>Create Order</a>
                 <table class="table table-sm">
                     <tr>
                         <th>ID</th>
