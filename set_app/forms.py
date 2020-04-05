@@ -31,6 +31,11 @@ class OrderForm(forms.ModelForm):
 		model = models.Order
 		fields = ['order_type', 'warehouse', 'customer','permit_type','permit_number','notes']
 
+class OrderInForm(forms.ModelForm):
+	class Meta():
+		model = models.Order
+		fields = ['order_type', 'warehouse', 'customer','permit_type','permit_number','notes']
+
 class ProductForm(forms.ModelForm):
 	class Meta():
 		model = models.Product

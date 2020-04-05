@@ -4,11 +4,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+
 from set_app.forms import *
 from set_app.models import *
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect, get_object_or_404
-from set_app.filters import ProductFilter
+from set_app.filters import OrderFilter
 from django.forms import inlineformset_factory
 
 # Imports for PDF to work
@@ -49,33 +51,42 @@ def special(request):
 
 
 def register(request):
-	registered = False
-	if request.method == "POST":
-		user_form = UserForm(data=request.POST)
-		profile_form = UserProfileInfoForm(data=request.POST)
+	form = UserCreationForm()
+	if request.method == 'POST':
+		form = UserCreationForm((request.POST))
+		if form.is_valid():
+			form.save()
+	context = {'form':form}
+	return render(request, 'set_app/registration.html', context)
 
-		if user_form.is_valid() and profile_form.is_valid():
-			user = user_form.save()
-			user.set_password(user.password)
-			user.save()
 
-			profile = profile_form.save(commit=False)
-			profile.user = user
-
-			if 'profile_pic' in request.FILES:
-				profile.profile_pic = request.FILES['profiles_pic']
-
-			profile.save()
-
-			registered = True
-		else:
-			print(user_form.errors, profile_form.errors)
-	else:
-		user_form = UserForm()
-		profile_form = UserProfileInfoForm()
-
-	return render(request, 'set_app/registration.html',
-	              {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
+	# registered = False
+	# if request.method == "POST":
+	# 	user_form = UserForm(data=request.POST)
+	# 	profile_form = UserProfileInfoForm(data=request.POST)
+	#
+	# 	if user_form.is_valid() and profile_form.is_valid():
+	# 		user = user_form.save()
+	# 		user.set_password(user.password)
+	# 		user.save()
+	#
+	# 		profile = profile_form.save(commit=False)
+	# 		profile.user = user
+	#
+	# 		if 'profile_pic' in request.FILES:
+	# 			profile.profile_pic = request.FILES['profiles_pic']
+	#
+	# 		profile.save()
+	#
+	# 		registered = True
+	# 	else:
+	# 		print(user_form.errors, profile_form.errors)
+	# else:
+	# 	user_form = UserForm()
+	# 	profile_form = UserProfileInfoForm()
+	#
+	# return render(request, 'set_app/registration.html',
+	#               {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
 
 
 def user_login(request):
@@ -127,10 +138,14 @@ class CustomerListView(ListView):
 
 def CustomerMorDetailView(request, pk):
 	customer = Customer.objects.get(id=pk)
-	orders = customer.order_set.all()
+	orders = customer.orders.all()
 	total_orders = orders.count()
 	customer_name = customer.__str__
-	context = {'customer':customer, 'orders':orders, 'total_orders':total_orders, 'customer_name':customer_name}
+
+	myFilter = OrderFilter(request.GET,queryset=orders)
+	orders = myFilter.qs
+
+	context = {'customer':customer, 'orders':orders, 'total_orders':total_orders, 'customer_name':customer_name,'myfilter':myFilter}
 	return render(request, 'set_app/customer_more_detail.html', context)
 
 class CustomerDetailView(DetailView):
@@ -180,6 +195,31 @@ def OrderCreateView(request, pk=-1):
 	context = {'order_form':order_form, 'driver_form':driver_form, 'formset':formset}
 	return render(request, 'set_app/order_form.html', context)
 
+def OrderInCreateView(request, pk=-1):
+	if pk > 0:
+		customer = Customer.objects.get(id=pk)
+		order_in_form = OrderInForm(initial={'customer': customer})
+	else:
+		order_in_form = OrderInForm()
+
+	TransactionFormSet = inlineformset_factory(Order, Transaction, fields=['product', 'count'],extra=5)
+	formset = TransactionFormSet()
+
+	driver_form = DriverForm()
+	if request.method == 'POST':
+		order_in_form = OrderInForm(request.POST)
+		driver_form = DriverForm(request.POST)
+		if order_in_form.is_valid()  and driver_form.is_valid():
+			driver = driver_form.save()
+			order = order_in_form.save(False)
+			order.driver=driver
+			order.save()
+			formset = TransactionFormSet(request.POST, instance=order)
+			if formset.is_valid():
+				formset.save()
+				return redirect('set_app:dashboard')
+	context = {'order_in_form':order_in_form, 'driver_form':driver_form, 'formset':formset}
+	return render(request, 'set_app/order/order_in_form.html', context)
 
 # class ProductListView(ListView):
 # 	context_object_name = 'items'

@@ -13,8 +13,10 @@
             <div class="card card-body" style="height: 11rem;">
                 <h5>Customer: <span style="color:darkgoldenrod">{{ customer_name }}</span></h5>
                 <hr>
-                <a class="btn btn-outline-info btn-sm btn-block" href="{% url 'set_app:customer_update' pk=customer.id %}">Update Customer</a>
-                <a class="btn btn-outline-info btn-sm btn-block" href={% url 'set_app:order_create' pk=customer.id %}>Create Order</a>
+                <a class="btn btn-outline-info btn-sm btn-block"
+                   href="{% url 'set_app:customer_update' pk=customer.id %}">Update Customer</a>
+                <a class="btn btn-outline-info btn-sm btn-block" href={% url 'set_app:order_create' pk=customer.id %}>Create
+                    Order</a>
             </div>
         </div>
 
@@ -73,15 +75,18 @@
         <div class="col">
             <div class="card card-body">
                 <form method="get">
-
+                    {{ myfilter.form }}
                     <button class="btn btn-primary" type="submit">Search</button>
                 </form>
             </div>
         </div>
 
     </div>
-    <br>
 
+
+
+
+    <br>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -111,47 +116,47 @@
         </tbody>
     </table>
 
-{#    <table class="table table-striped">#}
-{#        <thead>#}
-{#        <tr>#}
-{#            <th scope="col">#</th>#}
-{#            <th scope="col">Entity type</th>#}
-{#            <th scope="col">First name</th>#}
-{#            <th scope="col">Last name</th>#}
-{#            <th scope="col">Company name</th>#}
-{#            <th scope="col">Tel 1</th>#}
-{#            <th scope="col">Tel 2</th>#}
-{#            <th scope="col">Email</th>#}
-{#            <th scope="col">Address</th>#}
-{#            <th scope="col">Postcode</th>#}
-{#            <th scope="col">Warehouse</th>#}
-{#            <th scope="col">Action</th>#}
-{#        </tr>#}
-{#        </thead>#}
-{#        <tbody>#}
-{#        {% for customer in customers %}#}
-{#            <tr>#}
-{#                <th scope="row">{{ forloop.counter }}</th>#}
-{#                <td>{{ customer.entity_type }}</td>#}
-{#                <td>{{ customer.first_name }}</td>#}
-{#                <td>{{ customer.last_name }}</td>#}
-{#                <td>{{ customer.company_name }}</td>#}
-{#                <td>{{ customer.tel1 }}</td>#}
-{#                <td>{{ customer.tel2 }}</td>#}
-{#                <td>{{ customer.email }}</td>#}
-{#                <td>{{ customer.address }}</td>#}
-{#                <td>{{ customer.postcode }}</td>#}
-{#                <td>{{ customer.warehouse.name }}</td>#}
-{#                <td>#}
-{#                    <a href="{% url 'set_app:customer_update' pk=customer.pk %}" class="btn btn-warning btn-sm"#}
-{#                       role="button">Edit</a>#}
-{#                    <a href="{% url 'set_app:customer_detail' pk=customer.pk %}" class="btn btn-danger btn-sm"#}
-{#                       role="button">X</a>#}
-{#                </td>#}
-{#            </tr>#}
-{#        {% endfor %}#}
-{#        </tbody>#}
-{#    </table>#}
+    {#    <table class="table table-striped">#}
+    {#        <thead>#}
+    {#        <tr>#}
+    {#            <th scope="col">#</th>#}
+    {#            <th scope="col">Entity type</th>#}
+    {#            <th scope="col">First name</th>#}
+    {#            <th scope="col">Last name</th>#}
+    {#            <th scope="col">Company name</th>#}
+    {#            <th scope="col">Tel 1</th>#}
+    {#            <th scope="col">Tel 2</th>#}
+    {#            <th scope="col">Email</th>#}
+    {#            <th scope="col">Address</th>#}
+    {#            <th scope="col">Postcode</th>#}
+    {#            <th scope="col">Warehouse</th>#}
+    {#            <th scope="col">Action</th>#}
+    {#        </tr>#}
+    {#        </thead>#}
+    {#        <tbody>#}
+    {#        {% for customer in customers %}#}
+    {#            <tr>#}
+    {#                <th scope="row">{{ forloop.counter }}</th>#}
+    {#                <td>{{ customer.entity_type }}</td>#}
+    {#                <td>{{ customer.first_name }}</td>#}
+    {#                <td>{{ customer.last_name }}</td>#}
+    {#                <td>{{ customer.company_name }}</td>#}
+    {#                <td>{{ customer.tel1 }}</td>#}
+    {#                <td>{{ customer.tel2 }}</td>#}
+    {#                <td>{{ customer.email }}</td>#}
+    {#                <td>{{ customer.address }}</td>#}
+    {#                <td>{{ customer.postcode }}</td>#}
+    {#                <td>{{ customer.warehouse.name }}</td>#}
+    {#                <td>#}
+    {#                    <a href="{% url 'set_app:customer_update' pk=customer.pk %}" class="btn btn-warning btn-sm"#}
+    {#                       role="button">Edit</a>#}
+    {#                    <a href="{% url 'set_app:customer_detail' pk=customer.pk %}" class="btn btn-danger btn-sm"#}
+    {#                       role="button">X</a>#}
+    {#                </td>#}
+    {#            </tr>#}
+    {#        {% endfor %}#}
+    {#        </tbody>#}
+    {#    </table>#}
 
     {#	<div class="container">#}
     {#		<div class="row">#}

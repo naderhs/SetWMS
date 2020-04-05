@@ -1,7 +1,7 @@
 {#{% load static %}#}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'index' %}">SetWMS</a>
+        <a class="navbar-brand" href="{% url 'set_app:dashboard' %}">SetWMS</a>
 {#        <img src="{% static 'media/Set_Logo_en.png' %}" alt="SET Logo" width="150" height="43">#}
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -13,9 +13,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'set_app:dashboard' %}">Dashboard</a>
-                </li>
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'set_app:dashboard' %}">Dashboard</a>#}
+{#                </li>#}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'set_app:register' %}">Register</a>
                 </li>
@@ -50,6 +50,30 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="{% url 'set_app:product_list' %}">List</a>
                         <a class="dropdown-item" href="{% url 'set_app:product_create' %}">Create</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Order Action
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'set_app:order_in_create' %}">Inbound</a>
+                        <a class="dropdown-item" href="">Outbound</a>
+                        <a class="dropdown-item" href="">Transfer</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Reports
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="">Kardex</a>
+                        <a class="dropdown-item" href="">Etc 1</a>
+                        <a class="dropdown-item" href="">Etc 2</a>
                     </div>
                 </li>
                 {% if user.is_authenticated %}

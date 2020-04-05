@@ -98,6 +98,7 @@ class Customer(models.Model):
 			raise ValidationError('Melli code is invalid!')
 
 	def __str__(self):
+		print(self.entity_type[0] + " vs. " + self.INDIVIDUAL)
 		if self.entity_type == self.INDIVIDUAL:
 			return self.entity_type + " - " + self.first_name + " " + self.last_name
 		elif self.entity_type == self.COMPANY:
@@ -123,7 +124,6 @@ class Driver(models.Model):
 	melli_code = models.CharField(max_length=10, default=0, validators=[NUMERIC])
 	first_name = models.CharField(max_length=256, default="first name", blank=True)
 	last_name = models.CharField(max_length=256, default="last name", blank=True)
-	transport_company = models.CharField(max_length=256, default="company name", blank=True)
 	driver_code = models.CharField(max_length=20, default=0, validators=[NUMERIC])
 	tel1 = models.CharField(max_length=256, default="XXXXXXXX")
 	number_plate_1 = models.CharField(max_length=3, default=000, validators=[NUMERIC])
@@ -162,24 +162,33 @@ class Driver(models.Model):
 
 
 class Order(models.Model):
+	sys_order_no = models.PositiveIntegerField()
+	warehouse = models.ForeignKey(Warehouse, on_delete=models.SET_NULL, null=True, default=DEFAULT_WH_ID)
+	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, related_name='orders')
+	# customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
 	order_choices = (('IN', 'Inbound'), ('OU', 'Outbound'), ('TR', 'Transfer '))
 	order_type = models.CharField(max_length=10, choices=order_choices, default='ON', null=False)
-	warehouse = models.ForeignKey(Warehouse, on_delete=models.SET_NULL, null=True, default=DEFAULT_WH_ID)
-	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
-	driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True)
 	permit_choices = (('PAP', 'Paper'), ('FAX', 'Fax'), ('EMA', 'Email'), ('TEL', 'Telephone'))
 	permit_type = models.CharField(max_length=10, choices=permit_choices, default='ON', null=False)
 	permit_number = models.CharField(max_length=30, default="0", blank=False, unique=False, null=True)
 	notes = models.TextField(max_length=2048, default="some notes", blank=True)
+	origin_destination = models.CharField(max_length=30, default="0", blank=False, null=True)
+	billway_number = models.CharField(max_length=30, default="0", blank=False, unique=False, null=True)
+	transport_company = models.CharField(max_length=256, default="company name", blank=True)
+	sender_receiver = models.CharField(max_length=50, default="0", blank=False, unique=False, null=True)
+	receiving_customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, related_name='receiving_customer') #used only for transfer
 	status_choices = (('OFF', 'Off - inactive'), ('ON', 'On - active'))
 	status = models.CharField(max_length=20, choices=status_choices, default='ON')
 	timestamp_created = models.DateTimeField(auto_now_add=True)
+	driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True)
+
 
 	def __str__(self):
 		return self.order_type + " : " + self.customer.__str__() + " : " + self.status + " <" + self.timestamp_created.__str__() + ">"
 
 
 class Transaction(models.Model):
+
 	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
 	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
 	count = models.IntegerField(default=0, null=False)

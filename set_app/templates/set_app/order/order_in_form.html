@@ -1,0 +1,23 @@
+{% extends "set_app/set_app_base.html" %}
+
+{% block body_block %}
+    <h1>
+        Create inbound order
+    </h1>
+    <form class="form-horizontal" method="POST" action="">
+        {% csrf_token %}
+        <hr>
+        {{ order_in_form }}
+        <hr>
+        {{ driver_form }}
+        <hr>
+        {{ formset.management_form }}
+        {% for form in formset %}
+            {{ form }}
+            <hr>
+        {% endfor %}
+        <br>
+        <input type="submit" class="btn btn-primary" value="Submit">
+        <a href="{% url 'set_app:dashboard' %}" class="btn btn-warning" role="button">cancel</a>
+    </form>
+{% endblock %}
