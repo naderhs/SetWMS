@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.urls import path
 from set_app import views
 
@@ -5,6 +6,8 @@ from set_app import views
 app_name = 'set_app'
 
 urlpatterns = [
+
+    # Logins
     path('register/', views.register, name='register'),
     path('user_login/', views.user_login, name='user_login'),
 
@@ -12,7 +15,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
 
     # Warehouse URL patterns
-    path('warehouses/', views.WarehouseListView.as_view(), name='warehouse_list'),
+    path('warehouses/', login_required(views.WarehouseListView.as_view()), name='warehouse_list'),
     path('warehouses/<int:pk>/', views.WarehouseDetailView.as_view(), name='warehouse_detail'),
     path('warehouse_create/', views.WarehouseCreateView.as_view(), name='warehouse_create'),
     path('warehouse_update/<int:pk>/', views.WarehouseUpdateView.as_view(), name='warehouse_update'),

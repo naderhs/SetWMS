@@ -1,9 +1,11 @@
+from django.contrib import messages
 from django.shortcuts import render
 
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
+
 from django.contrib.auth.forms import UserCreationForm
 
 from set_app.forms import *
@@ -24,6 +26,7 @@ def index(request):
 	return render(request, 'set_app/index.html')
 
 # Dashboard view
+@login_required(login_url='set_app:user_login')
 def dashboard(request):
 	customers = Customer.objects.all()
 	total_customers = customers.count()
@@ -40,53 +43,50 @@ def dashboard(request):
 	context = {'customers':customers,'orders':orders,'total_customers':total_customers,'total_orders':total_orders}
 	return render(request, 'set_app/dashboard.html', context)
 
-@login_required
+@login_required(login_url='set_app:user_login')
 def user_logout(request):
 	logout(request)
-	return HttpResponseRedirect(reverse('index'))
+	return HttpResponseRedirect(reverse('set_app:user_login'))
 
-@login_required
 def special(request):
 	return HttpResponse('You are logged in nice!')
 
-
 def register(request):
-	form = UserCreationForm()
-	if request.method == 'POST':
-		form = UserCreationForm((request.POST))
-		if form.is_valid():
-			form.save()
-	context = {'form':form}
-	return render(request, 'set_app/registration.html', context)
+	# form = UserCreationForm()
+	# if request.method == 'POST':
+	# 	form = UserCreationForm((request.POST))
+	# 	if form.is_valid():
+	# 		form.save()
+	# context = {'form':form}
+	# return render(request, 'set_app/registration.html', context)
 
+	registered = False
+	if request.method == "POST":
+		user_form = UserForm(data=request.POST)
+		profile_form = UserProfileInfoForm(data=request.POST)
 
-	# registered = False
-	# if request.method == "POST":
-	# 	user_form = UserForm(data=request.POST)
-	# 	profile_form = UserProfileInfoForm(data=request.POST)
-	#
-	# 	if user_form.is_valid() and profile_form.is_valid():
-	# 		user = user_form.save()
-	# 		user.set_password(user.password)
-	# 		user.save()
-	#
-	# 		profile = profile_form.save(commit=False)
-	# 		profile.user = user
-	#
-	# 		if 'profile_pic' in request.FILES:
-	# 			profile.profile_pic = request.FILES['profiles_pic']
-	#
-	# 		profile.save()
-	#
-	# 		registered = True
-	# 	else:
-	# 		print(user_form.errors, profile_form.errors)
-	# else:
-	# 	user_form = UserForm()
-	# 	profile_form = UserProfileInfoForm()
-	#
-	# return render(request, 'set_app/registration.html',
-	#               {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
+		if user_form.is_valid() and profile_form.is_valid():
+			user = user_form.save()
+			user.set_password(user.password)
+			user.save()
+
+			profile = profile_form.save(commit=False)
+			profile.user = user
+
+			if 'profile_pic' in request.FILES:
+				profile.profile_pic = request.FILES['profiles_pic']
+
+			profile.save()
+
+			registered = True
+		else:
+			print(user_form.errors, profile_form.errors)
+	else:
+		user_form = UserForm()
+		profile_form = UserProfileInfoForm()
+
+	return render(request, 'set_app/registration.html',
+	              {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
 
 
 def user_login(request):
@@ -97,17 +97,19 @@ def user_login(request):
 		if user:
 			if user.is_active:
 				login(request, user)
-				return HttpResponseRedirect(reverse('index'))
+				return HttpResponseRedirect(reverse('set_app:dashboard'))
 
 			else:
-				return HttpResponse('ACCOUNT NOT ACTIVE')
+				print('======= Account is inactive!')
+				messages.info(request, 'Account is inactive!')
+				return render(request, 'set_app/login.html', {})
+				# return HttpResponse('ACCOUNT NOT ACTIVE')
 		else:
-			print('someone tried to login and failed')
-			print('uusername: {} and password {}'.format(username, password))
-			return HttpResponse("invalid login details supplied! ")
+			print('======= Username or password is incorrect!')
+			messages.info(request, 'Username or password is incorrect!')
+			return render(request, 'set_app/login.html', {})
 	else:
 		return render(request, 'set_app/login.html', {})
-
 
 class WarehouseListView(ListView):
 	context_object_name = 'warehouses'

@@ -1,8 +1,21 @@
 {#{% load static %}#}
+
+<style>
+    .hello-msg{
+        font-size: 18px;
+        color: #fff;
+        margin-right: 20px;
+    }
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'set_app:dashboard' %}">SetWMS</a>
-{#        <img src="{% static 'media/Set_Logo_en.png' %}" alt="SET Logo" width="150" height="43">#}
+        {% if user.is_authenticated %}
+            <a class="navbar-brand" href="{% url 'set_app:dashboard' %}">SetWMS</a>
+        {#        <img src="{% static 'media/Set_Logo_en.png' %}" alt="SET Logo" width="150" height="43">#}
+        {% else %}
+            <a class="navbar-brand" href="{% url 'set_app:user_login' %}">SetWMS</a>
+        {% endif %}
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -10,82 +23,83 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-                </li>
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link" href="{% url 'set_app:dashboard' %}">Dashboard</a>#}
-{#                </li>#}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'set_app:register' %}">Register</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        Wareohouse
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{% url 'set_app:warehouse_list' %}">List</a>
-                        <a class="dropdown-item" href="{% url 'set_app:warehouse_create' %}">Create</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        Customer
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{% url 'set_app:customer_list' %}">List</a>
-                        <a class="dropdown-item" href="{% url 'set_app:customer_create' %}">Create</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        Product
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{% url 'set_app:product_list' %}">List</a>
-                        <a class="dropdown-item" href="{% url 'set_app:product_create' %}">Create</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        Order Action
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{% url 'set_app:order_in_create' %}">Inbound</a>
-                        <a class="dropdown-item" href="">Outbound</a>
-                        <a class="dropdown-item" href="">Transfer</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        Reports
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="">Kardex</a>
-                        <a class="dropdown-item" href="">Etc 1</a>
-                        <a class="dropdown-item" href="">Etc 2</a>
-                    </div>
-                </li>
                 {% if user.is_authenticated %}
-                    <li>
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
                     </li>
-                {% else %}
-                    <li>
-                        <a class="nav-link" href="{% url 'set_app:user_login' %}">Login</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'set_app:register' %}">Register</a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Wareohouse
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'set_app:warehouse_list' %}">List</a>
+                            <a class="dropdown-item" href="{% url 'set_app:warehouse_create' %}">Create</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Customer
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'set_app:customer_list' %}">List</a>
+                            <a class="dropdown-item" href="{% url 'set_app:customer_create' %}">Create</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Product
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'set_app:product_list' %}">List</a>
+                            <a class="dropdown-item" href="{% url 'set_app:product_create' %}">Create</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Order Action
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'set_app:order_in_create' %}">Inbound</a>
+                            <a class="dropdown-item" href="">Outbound</a>
+                            <a class="dropdown-item" href="">Transfer</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Reports
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="">Kardex</a>
+                            <a class="dropdown-item" href="">Etc 1</a>
+                            <a class="dropdown-item" href="">Etc 2</a>
+                        </div>
+                    </li>
+{#                    <li>#}
+{#                        <a class="nav-link" href="{% url 'logout' %}">Logout : [{{ request.user}}]</a>#}
+{#                    </li>#}
+{#                {% else %}#}
+{#                    <li>#}
+{#                        <a class="nav-link" href="{% url 'set_app:user_login' %}">Login</a>#}
+{#                    </li>#}
                 {% endif %}
             </ul>
         </div>
     </div>
+    {% if user.is_authenticated %}
+        <span class="hello-msg">Hello, [{{ request.user }}]</span>
+        <span class="hello-msg"><a class="nav-link" href="{% url 'set_app:user_login' %}">Logout</a></span>
+    {% endif %}
 </nav>

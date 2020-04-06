@@ -35,7 +35,6 @@ def add_customers(wh, N=10):
 	for n in range(N):
 		cust = Customer()
 		cust.entity_type = random.choices(['IN', 'CO'],k=1)[0]
-		print(cust.entity_type)
 		cust.first_name = fakegen.first_name()
 		cust.last_name = fakegen.last_name()
 		cust.company_name = fakegen.company()
@@ -56,7 +55,7 @@ def add_customers(wh, N=10):
 	return cust_list
 
 
-def add_products(wh, N=10):
+def add_products(N=10):
 	prod_list = []
 
 	name_strings = ['Macbook 13 inch', 'Galaxy S8', 'Golf GTI 2020', 'Gold Mine WA', 'Asprin TM',
@@ -79,6 +78,93 @@ def add_products(wh, N=10):
 
 	return prod_list
 
+def	add_order(wh,cust_list,prod_list,N=10):
+
+	for n in range(N):
+		order_in = Order()
+		order_in.order_type = 'IN'
+		order_in.sys_order_no = n
+		order_in.warehouse = wh
+		order_in.customer = cust_list[n]
+		order_in.permit_type = random.choices(['PAP', 'FAX', 'EMA', 'TEL'], k=1)[0]
+		order_in.permit_number = random.randrange(500000,950000)
+		order_in.notes = fakegen.text(30)
+		order_in.origin_destination = random.choices(['Tehran', 'Shiraz', 'Isfahan', 'Yazd', 'Qom', 'Sari', 'Ahvaz', 'Semnan', 'Tabriz', 'Saveh'], k=1)[0]
+		order_in.billway_number = random.randrange(10000,50000)
+		order_in.transport_company = random.choices(['Neginbar', 'Savadbar', 'Shahinbar', 'Sepehrbar', 'Javid Tarabar'], k=1)[0]
+		order_in.sender_receiver = fakegen.company()
+		#receiving_customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, related_name='receiving_customer')  # used only for transfer
+		order_in.driver = add_driver()
+		order_in.save()
+		for i in range(5):
+			trans = Transaction()
+			trans.order = order_in
+			trans.product = prod_list[i]
+			trans.count = random.randrange(100,200)
+			trans.save()
+
+	for n in range(N):
+		order_in = Order()
+		order_in.order_type = 'OU'
+		order_in.sys_order_no = n
+		order_in.warehouse = wh
+		order_in.customer = cust_list[n]
+		order_in.permit_type = random.choices(['PAP', 'FAX', 'EMA', 'TEL'], k=1)[0]
+		order_in.permit_number = random.randrange(500000, 950000)
+		order_in.notes = fakegen.text(30)
+		order_in.origin_destination = random.choices(['Tehran', 'Shiraz', 'Isfahan', 'Yazd', 'Qom', 'Sari', 'Ahvaz', 'Semnan', 'Tabriz', 'Saveh'], k=1)[0]
+		order_in.billway_number = random.randrange(10000, 50000)
+		order_in.transport_company = random.choices(['Neginbar', 'Savadbar', 'Shahinbar', 'Sepehrbar', 'Javid Tarabar'], k=1)[0]
+		order_in.sender_receiver = fakegen.company()
+		# receiving_customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, related_name='receiving_customer')  # used only for transfer
+		order_in.driver = add_driver()
+		order_in.save()
+		for i in range(5):
+			trans = Transaction()
+			trans.order = order_in
+			trans.product = prod_list[i]
+			trans.count = random.randrange(20, 50)
+			trans.save()
+
+	for n in range(5):
+		order_in = Order()
+		order_in.order_type = 'TR'
+		order_in.sys_order_no = n
+		order_in.warehouse = wh
+		order_in.customer = cust_list[n]
+		order_in.permit_type = random.choices(['PAP', 'FAX', 'EMA', 'TEL'], k=1)[0]
+		order_in.permit_number = random.randrange(500000, 950000)
+		order_in.notes = fakegen.text(30)
+		order_in.origin_destination = random.choices(['Tehran', 'Shiraz', 'Isfahan', 'Yazd', 'Qom', 'Sari', 'Ahvaz', 'Semnan', 'Tabriz', 'Saveh'], k=1)[0]
+		order_in.billway_number = random.randrange(10000, 50000)
+		order_in.transport_company = random.choices(['Neginbar', 'Savadbar', 'Shahinbar', 'Sepehrbar', 'Javid Tarabar'], k=1)[0]
+		order_in.sender_receiver = fakegen.company()
+		receiving_customer = Customer.objects.get(id=(n+1))
+		# receiving_customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, related_name='receiving_customer')  # used only for transfer
+		order_in.driver = add_driver()
+		order_in.save()
+		for i in range(2):
+			trans = Transaction()
+			trans.order = order_in
+			trans.product = prod_list[i]
+			trans.count = random.randrange(10, 20)
+			trans.save()
+
+
+def add_driver():
+	driver = Driver()
+	driver.melli_code = '1189144549'
+	driver.first_name = fakegen.first_name()
+	driver.last_name = fakegen.last_name()
+	driver.driver_code = random.randrange(80000,89999)
+	driver.tel1 = fakegen.phone_number()
+	driver.number_plate_1 = random.randrange(100,999)
+	driver.number_plate_letter = random.choices(['ع','غ','ف','ک','گ','ل','م','ن','و','ه','ی'],k=1)[0]
+	driver.number_plate_2 = random.randrange(10,99)
+	driver.number_plate_iran = random.randrange(10,99)
+	driver.truck_size = random.choices(['MOT','CAR','VAN','NIS','ISU','KHA','BUD','TAK','JOF','20F','40F','40H','FBT','SRT','TRT'],k=1)[0]
+	driver.save()
+	return driver
 
 # def add_topic():
 # 	t = Topic.objects.get_or_create(top_name=random.choice(topics))[0]
@@ -115,8 +201,11 @@ if __name__ == '__main__':
 
 	prod_list = []
 	if Product.objects.count() == 0:
-		prod_list = add_products(wh,10)
+		prod_list = add_products(10)
 	else:
 		prod_list = Product.objects.all()
+
+	if Order.objects.count() == 0:
+		add_order(wh,cust_list,prod_list,10)
 
 	print("populating complete!")

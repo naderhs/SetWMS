@@ -6,7 +6,6 @@ from django.core.exceptions import ValidationError
 
 from django.core.validators import RegexValidator
 import re
-import datetime
 
 DEFAULT_WH_ID = 1
 NUMERIC = RegexValidator(r'^[0-9]*$', 'Only anumeric characters are allowed.')
@@ -31,7 +30,6 @@ class UserProfileInfo(models.Model):
 			raise ValidationError('Melli code is invalid!')
 
 	def __str__(self):
-		print("test:")
 		return self.user.username
 
 
@@ -98,7 +96,6 @@ class Customer(models.Model):
 			raise ValidationError('Melli code is invalid!')
 
 	def __str__(self):
-		print(self.entity_type[0] + " vs. " + self.INDIVIDUAL)
 		if self.entity_type == self.INDIVIDUAL:
 			return self.entity_type + " - " + self.first_name + " " + self.last_name
 		elif self.entity_type == self.COMPANY:

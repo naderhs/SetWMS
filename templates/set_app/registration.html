@@ -3,20 +3,19 @@
 {% block body_block %}
     <div class="jumbotron">
         <h1>Registration</h1>
-{#        {% if registered %}#}
-{#            <h3>Thank you for registering!</h3>#}
-{#        {% else %}#}
-{#            <h3>Register here!</h3>#}
-{#            <h3>Fill out the form:</h3>#}
-{#            <form enctype="multipart/form-data" method="post">#}
+        {% if registered %}
+            <h3>Thank you for registering!</h3>
+        {% else %}
+            <h3>Register here!</h3>
+            <h3>Fill out the form:</h3>
+            <form enctype="multipart/form-data" method="post">
             <form method="POST ">
-
                 {% csrf_token %}
-                {{ form.as_p }}
-{#                {{ user_form.as_p }}#}
-{#                {{ profile_form.as_p }}#}
+{#                {{ form.as_p }}#}
+                {{ user_form.as_p }}
+                {{ profile_form.as_p }}
             <input type="submit" name="" value="Register">
             </form>
-{#        {% endif %}#}
+        {% endif %}
     </div>
 {% endblock %}

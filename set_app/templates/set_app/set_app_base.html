@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     {% include 'set_app/set_app_header.html' %}
+    {% block head_block %}
+
+    {% endblock %}
 </head>
 <body>
 
@@ -9,6 +12,7 @@
 
 <div class="container">
     {% block body_block %}
+
     {% endblock %}
 </div>
 
