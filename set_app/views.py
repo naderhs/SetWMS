@@ -197,10 +197,10 @@ def OrderCreateView(request, pk=-1):
 	context = {'order_form':order_form, 'driver_form':driver_form, 'formset':formset}
 	return render(request, 'set_app/order_form.html', context)
 
-def OrderInCreateView(request, pk=-1):
+def OrderInCreateView(request, pk=-1, ot='IN'):
 	if pk > 0:
 		customer = Customer.objects.get(id=pk)
-		order_in_form = OrderInForm(initial={'customer': customer})
+		order_in_form = OrderInForm(initial={'warehouse_id':1, 'customer': customer,'order_type':ot})
 	else:
 		order_in_form = OrderInForm()
 

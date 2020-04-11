@@ -7,7 +7,7 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
     </data-source>
-    <data-source source="LOCAL" name="db" uuid="d96930f6-2a67-40c1-8fb1-fa2982a4563a">
+    <data-source source="LOCAL" name="db" uuid="c83034fa-ffd9-4862-aa09-e113c1562cd0">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>

@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.forms import Textarea
+
 from set_app import models
 
 
@@ -34,12 +36,15 @@ class OrderForm(forms.ModelForm):
 class OrderInForm(forms.ModelForm):
 	class Meta():
 		model = models.Order
-		fields = ['order_type', 'warehouse', 'customer','permit_type','permit_number','notes']
+		fields = '__all__'
 
 class ProductForm(forms.ModelForm):
 	class Meta():
 		model = models.Product
 		fields = '__all__'
+		widgets = {
+			'notes': Textarea(attrs={'cols': 200, 'rows': 5}),
+		}
 
 class TransactionForm(forms.ModelForm):
 	class Meta():

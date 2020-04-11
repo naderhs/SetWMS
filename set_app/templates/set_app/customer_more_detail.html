@@ -13,10 +13,18 @@
             <div class="card card-body" style="height: 11rem;">
                 <h5>Customer: <span style="color:darkgoldenrod">{{ customer_name }}</span></h5>
                 <hr>
+
                 <a class="btn btn-outline-info btn-sm btn-block"
                    href="{% url 'set_app:customer_update' pk=customer.id %}">Update Customer</a>
-                <a class="btn btn-outline-info btn-sm btn-block" href={% url 'set_app:order_create' pk=customer.id %}>Create
-                    Order</a>
+                <p></p>
+                <div class="btn-group btn-group-sm" role="group">
+                    <a type="button" class="btn btn-outline-info"
+                       href={% url 'set_app:order_in_create' pk=customer.id ot='IN' %}>IN</a>
+                    <a type="button" class="btn btn-outline-info"
+                       href={% url 'set_app:order_in_create' pk=customer.id ot='TR' %}>TRANSFER</a>
+                    <a type="button" class="btn btn-outline-info"
+                       href={% url 'set_app:order_in_create' pk=customer.id ot='OU' %}>OUT</a>
+                </div>
             </div>
         </div>
 

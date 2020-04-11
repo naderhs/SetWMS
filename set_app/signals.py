@@ -32,15 +32,21 @@ def create_inventory(sender, instance, created, **kwargs):
 		elif order_type == 'TR':
 			existing_row2 = Inventory.objects.filter(warehouse_id=warehouse.id, customer_id=receiving_cust_id,
 			                                         product_id=product.id)
-			inv2 = existing_row2.first()
-			inv.count -= n
-			inv2.count += n
-			inv2.save(update_fields=['count'])
+			if existing_row2.count() < 1:
+				inv2 = Inventory(warehouse_id=warehouse.id, customer_id=customer.id, product_id=product.id, count=n)
+				inv2.save()
+			elif existing_row.count() == 1:
+				inv2 = existing_row2.first()
+				inv.count -= n
+				inv2.count += n
+				inv2.save(update_fields=['count'])
+			else:
+				ValueError('Inventory filter for existing_row2 should only match zero OR one row!')
 		else:
 			ValueError('Order type should only match be IN, OU and TR!')
 		inv.save(update_fields=['count'])
 	else:
-		ValueError('Inventory filter should only match zero OR one row!')
+		ValueError('Inventory filter for existing_row should only match zero OR one row!')
 
 # post_save.connect(create_inventory, sender=Transaction)
 

@@ -93,7 +93,6 @@ def	add_order(wh,cust_list,prod_list,N=10):
 		order_in.billway_number = random.randrange(10000,50000)
 		order_in.transport_company = random.choices(['Neginbar', 'Savadbar', 'Shahinbar', 'Sepehrbar', 'Javid Tarabar'], k=1)[0]
 		order_in.sender_receiver = fakegen.company()
-		#receiving_customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, related_name='receiving_customer')  # used only for transfer
 		order_in.driver = add_driver()
 		order_in.save()
 		for i in range(5):
@@ -116,7 +115,6 @@ def	add_order(wh,cust_list,prod_list,N=10):
 		order_in.billway_number = random.randrange(10000, 50000)
 		order_in.transport_company = random.choices(['Neginbar', 'Savadbar', 'Shahinbar', 'Sepehrbar', 'Javid Tarabar'], k=1)[0]
 		order_in.sender_receiver = fakegen.company()
-		# receiving_customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, related_name='receiving_customer')  # used only for transfer
 		order_in.driver = add_driver()
 		order_in.save()
 		for i in range(5):
@@ -140,8 +138,6 @@ def	add_order(wh,cust_list,prod_list,N=10):
 		order_in.transport_company = random.choices(['Neginbar', 'Savadbar', 'Shahinbar', 'Sepehrbar', 'Javid Tarabar'], k=1)[0]
 		order_in.sender_receiver = fakegen.company()
 		order_in.receiving_customer = cust_list[n+1]
-		print('order_in.receiving_customer_id = ' + order_in.receiving_customer_id.__str__())
-		# receiving_customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, related_name='receiving_customer')  # used only for transfer
 		order_in.driver = add_driver()
 		order_in.save()
 		for i in range(2):
