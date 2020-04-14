@@ -1,0 +1,57 @@
+{% extends "set_app/base/set_app_base.html" %}
+
+{% block body_block %}
+
+    <h2>Customer list</h2>
+
+    <div class="row">
+        <div class="col">
+            <div class="card card-body">
+                <form method="get">
+                    {{ cust_filter.form }}
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-sm">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Entity type</th>
+            <th scope="col">Name</th>
+            <th scope="col">Warehouse</th>
+            <th scope="col">Tel</th>
+            <th scope="col">Email</th>
+            <th scope="col">Date Added</th>
+        </tr>
+        <tbody>
+        {% for customer in customers %}
+            <tr>
+                <td scope="row">{{ forloop.counter }}</td>
+                <td>{{ customer.entity_type }}</td>
+                <td>
+                    {% if customer.entity_type == "IN" %}
+                        <a href={% url 'set_app:customer_more_detail' pk=customer.pk %}>{{ customer.first_name }} {{ customer.last_name }}</a>
+                    {% else %}
+                        <a href={% url 'set_app:customer_more_detail' pk=customer.pk %}>{{ customer.company_name }}</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href={% url 'set_app:warehouse_detail' pk=customer.warehouse.pk %}>{{ customer.warehouse.name }}</a>
+                </td>
+                <td>
+                    {{ customer.tel1 }} / {{ customer.tel2 }}
+                </td>
+                <td>
+                    {{ customer.email }}
+                </td>
+                <td>
+                    {{ customer.timestamp_created|date:"d/m/Y" }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

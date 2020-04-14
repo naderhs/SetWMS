@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% include 'set_app/set_app_header.html' %}
+    {% include 'set_app/base/set_app_header.html' %}
     {% block head_block %}
 
     {% endblock %}
 </head>
 <body>
 
-{% include 'set_app/set_app_navbar.html' %}
+{% include 'set_app/base/set_app_navbar.html' %}
 
 <div class="container">
     {% block body_block %}
@@ -16,7 +16,7 @@
     {% endblock %}
 </div>
 
-{% include 'set_app/set_app_optional_javascript.html' %}
+{% include 'set_app/base/set_app_optional_javascript.html' %}
 {% block custom_js %}
 
 {% endblock %}

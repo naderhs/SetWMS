@@ -1,0 +1,58 @@
+
+.plate-input-group > input {
+    font-weight: 700;
+    font-size: 2.8vw !important;
+    border: 0 !important
+}
+
+.plate-input-group > input:active {
+    border: 0 !important
+}
+
+.plate p {
+    font-weight: 700
+}
+
+.plate img {
+    width: 270px
+}
+
+.plate-image {
+    position: relative;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center
+}
+
+.plate-iran {
+    right: 20px
+}
+
+.plate-iran, .plate-numbers {
+    position: absolute;
+    font-weight: 700;
+    font-size: 2em;
+    top: 5px
+}
+
+.plate-numbers {
+    right: 80px
+}
+
+.plate-input {
+    font-weight: 700;
+    font-size: 25px !important
+}
+
+.full-width {
+    width: 100%
+}
+
+button, input, optgroup, select, textarea {
+    font-family: sans-serif;
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0
+}
+

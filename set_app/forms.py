@@ -28,15 +28,12 @@ class CustomerForm(forms.Form):
 	last_name = forms.CharField(max_length=30)
 	company_name = forms.CharField(max_length=30)
 
+
 class OrderForm(forms.ModelForm):
 	class Meta():
 		model = models.Order
-		fields = ['order_type', 'warehouse', 'customer','permit_type','permit_number','notes']
-
-class OrderInForm(forms.ModelForm):
-	class Meta():
-		model = models.Order
 		fields = '__all__'
+
 
 class ProductForm(forms.ModelForm):
 	class Meta():
@@ -46,10 +43,12 @@ class ProductForm(forms.ModelForm):
 			'notes': Textarea(attrs={'cols': 200, 'rows': 5}),
 		}
 
+
 class TransactionForm(forms.ModelForm):
 	class Meta():
 		model = models.Transaction
 		fields = ['product', 'count']
+
 
 class DriverForm(forms.ModelForm):
 	class Meta():

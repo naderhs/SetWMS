@@ -155,9 +155,12 @@ def add_driver():
 	driver.last_name = fakegen.last_name()
 	driver.driver_code = random.randrange(80000,89999)
 	driver.tel1 = fakegen.phone_number()
-	driver.number_plate_1 = random.randrange(100,999)
-	driver.number_plate_letter = random.choices(['ع','غ','ف','ک','گ','ل','م','ن','و','ه','ی'],k=1)[0]
-	driver.number_plate_2 = random.randrange(10,99)
+	driver.number_plate_1 = random.randrange(10,50)
+	driver.number_plate_letter = random.choices(['01','02','03','04','05','06','07','08','09','10',
+	                                             '11','12','13','14','15','16','17','18','19','20'
+	                                             '21','22','23','24','25','26','27','28','29','30'
+	                                             '31','32'],k=1)[0]
+	driver.number_plate_2 = random.randrange(500,999)
 	driver.number_plate_iran = random.randrange(10,99)
 	driver.truck_size = random.choices(['MOT','CAR','VAN','NIS','ISU','KHA','BUD','TAK','JOF','20F','40F','40H','FBT','SRT','TRT'],k=1)[0]
 	driver.save()

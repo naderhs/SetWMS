@@ -22,7 +22,7 @@ urlpatterns = [
     path('warehouse_delete/<int:pk>/', views.WarehouseDeleteView.as_view(), name='warehouse_delete'),
 
     # Customer URL patterns
-    path('customers/', views.CustomerListView.as_view(), name='customer_list'),
+    path('customers/', views.CustomerListView, name='customer_list'),
     path('customers/<int:pk>/', views.CustomerMorDetailView, name='customer_more_detail'),
     # path('customers/<int:pk>/', views.CustomerDetailView.as_view(), name='customer_detail'),
     path('customer_create/', views.CustomerCreateView.as_view(), name='customer_create'),
@@ -30,10 +30,10 @@ urlpatterns = [
     path('customer_delete/<int:pk>/', views.CustomerDeleteView.as_view(), name='customer_delete'),
 
     # Order URL patters
+    # path('order_create/', views.OrderCreateView, name='order_create'),
+    # path('order_create/<int:pk>', views.OrderCreateView, name='order_create'),
     path('order_create/', views.OrderCreateView, name='order_create'),
-    path('order_create/<int:pk>', views.OrderCreateView, name='order_create'),
-    path('order_in_create/', views.OrderInCreateView, name='order_in_create'),
-    path('order_in_create/<int:pk>/<str:ot>/', views.OrderInCreateView, name='order_in_create'),
+    path('order_create/<int:pk>/<str:ot>/', views.OrderCreateView, name='order_create'),
 
     # Product URL patters
     # path('products/', views.ProductListView.as_view(), name='product_list'),
@@ -46,8 +46,11 @@ urlpatterns = [
     # Driver URL pattens
     path('driver_create/', views.DriverCreateView.as_view(), name='driver_create'),
 
-    # Download or view PDF
-    path('customer/pdf_view/', views.CustomerViewPDF.as_view(), name="customer_pdf_view"),
-    path('customer/pdf_download/', views.CustomerDownloadPDF.as_view(), name="customer_pdf_download"),
+    # REPORTS
+    path('inventory/', views.InventoryView, name='inventory'),
+
+    # # Download or view PDF
+    # path('customer/pdf_view/', views.CustomerViewPDF.as_view(), name="customer_pdf_view"),
+    # path('customer/pdf_download/', views.CustomerDownloadPDF.as_view(), name="customer_pdf_download"),
 
 ]

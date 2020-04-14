@@ -1,0 +1,166 @@
+{% extends "set_app/base/set_app_base.html" %}
+{% load static %}
+
+{% block body_block %}
+    <h3>
+        {% if order_form.order_type.value == 'IN' %}
+            Create INBOUND order
+        {% elif order_form.order_type.value == 'OU' %}
+            Create OUTBOUND order
+        {% elif order_form.order_type.value == 'TR' %}
+            Create TRANSFER order
+        {% endif %}
+    </h3>
+    <form class="form-horizontal" method="POST" action="">
+        {% csrf_token %}
+        <hr>
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <label for="customer">{{ order_form.customer.label }}:</label>
+                {{ order_form.customer }}
+            </div>
+            <div class="form-group col-md-3">
+                {% if order_form.order_type.value == 'IN' %}
+                    <label for="sender_receiver">Sender:</label>
+                    {{ order_form.sender_receiver }}
+                {% elif order_form.order_type.value == 'OU' %}
+                    <label for="sender_receiver">Receiver:</label>
+                    {{ order_form.sender_receiver }}
+                {% elif order_form.order_type.value == 'TR' %}
+                    <label for="sender_receiver">{{ order_form.receiving_customer.label }}:</label>
+                    {{ order_form.receiving_customer }}
+                {% endif %}
+            </div>
+            <div class="form-group col-md-3">
+                <label for="permit_type">{{ order_form.permit_type.label }}:</label>
+                {{ order_form.permit_type }}
+            </div>
+            <div class="form-group col-md-3">
+                <label for="permit_number">{{ order_form.permit_number.label }}:</label>
+                {{ order_form.permit_number }}
+            </div>
+        </div>
+        {% if order_form.order_type.value != 'TR' %}
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    {% if order_form.order_type.value == 'IN' %}
+                        <label for="origin_destination">Origin:</label>
+                    {% else %}
+                        <label for="origin_destination">Destination:</label>
+                    {% endif %}
+                    {{ order_form.origin_destination }}
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputEmtransport_companyail4">{{ order_form.transport_company.label }}</label>
+                    {{ order_form.transport_company }}
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="billway_number">{{ order_form.billway_number.label }}:</label>
+                    {{ order_form.billway_number }}
+                </div>
+            </div>
+        {% endif %}
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ order_form.notes.label }}:
+                <textarea name="notes" style="width:100%;" rows="3" maxlength="2048" id="id_notes">some notes</textarea>
+            </div>
+        </div>
+        {% if order_form.order_type.value != 'TR' %}
+            <hr>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="melli_code">Driver melli code:</label>
+                    {{ driver_form.melli_code }}
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="first_name">Driver first name:</label>
+                    {{ driver_form.first_name }}
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="last_name">Driver last name}:</label>
+                    {{ driver_form.last_name }}
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="driver_code">{{ driver_form.driver_code.label }}:</label>
+                    {{ driver_form.driver_code }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="tel1">Telephone:</label>
+                    {{ driver_form.tel1 }}
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="truck_size">{{ driver_form.truck_size.label }}:</label>
+                    {{ driver_form.truck_size }}
+                </div>
+            </div>
+            <div class="plate center-align">
+                <div class="plate-image"><img src="{% static "media/plate_empty.jpg" %}">
+                    <input id="number_plate_iran" name="number_plate_iran"
+                           type="text" maxlength="2" value=""
+                           autocomplete="off"
+                           inputmode="number" tabindex="4"
+                           dir="ltr" class="plate-input number"
+                           style="max-width: 40px; position: absolute; left: 217px; top: 15px;">
+                    <input id="number_plate_2" name="number_plate_2" type="text" maxlength="3" value=""
+                           autocomplete="off"
+                           inputmode="number"
+                           tabindex="3" dir="ltr" class="plate-input number"
+                           style="max-width: 50px; position: absolute; left: 155px; top: 15px;">
+                    <div style="max-width: 50px; position: absolute; left: 74px; top: 15px;">
+                        <select id="number_plate_letter" name="number_plate_letter" tabindex="2"
+                                class="browser-default">
+                            <option value="01">الف</option>
+                            <option value="02">ب</option>
+                            <option value="03">پ</option>
+                            <option value="04">ت</option>
+                            <option value="05">ث</option>
+                            <option value="06">ج</option>
+                            <option value="07">چ</option>
+                            <option value="08">ح</option>
+                            <option value="09">خ</option>
+                            <option value="10">د</option>
+                            <option value="11">ذ</option>
+                            <option value="12">ر</option>
+                            <option value="13">ز</option>
+                            <option value="14">ژ</option>
+                            <option value="15">س</option>
+                            <option value="16">ش</option>
+                            <option value="17">ص</option>
+                            <option value="18">ض</option>
+                            <option value="19">ط</option>
+                            <option value="20">ظ</option>
+                            <option value="21">ع</option>
+                            <option value="22">غ</option>
+                            <option value="23">ف</option>
+                            <option value="24">ق</option>
+                            <option value="25">ک</option>
+                            <option value="26">گ</option>
+                            <option value="27">ل</option>
+                            <option value="28">م</option>
+                            <option value="29">ن</option>
+                            <option value="30">و</option>
+                            <option value="31">ه</option>
+                            <option value="32">ی</option>
+                        </select></div>
+                    <input id="number_plate_1" name="number_plate_1" type="text" maxlength="2" value=""
+                           autocomplete="off"
+                           inputmode="number"
+                           tabindex="1" class="plate-input number"
+                           style="max-width: 40px; position: absolute; left: 30px; top: 15px;">
+                </div>
+            </div>
+        {% endif %}
+        <hr>
+        {{ formset.management_form }}
+        {% for form in formset %}
+            {{ form }}
+            <hr>
+        {% endfor %}
+        <br>
+        <input type="submit" class="btn btn-primary" value="Submit">
+        <a href="{% url 'set_app:dashboard' %}" class="btn btn-warning" role="button">Cancel</a>
+    </form>
+{% endblock %}

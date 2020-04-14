@@ -124,26 +124,27 @@ class Driver(models.Model):
 	last_name = models.CharField(max_length=256, default="last name", blank=True)
 	driver_code = models.CharField(max_length=20, default=0, validators=[NUMERIC])
 	tel1 = models.CharField(max_length=256, default="XXXXXXXX")
-	number_plate_1 = models.CharField(max_length=3, default=000, validators=[NUMERIC])
-	persian_letters = (
-		('الف', 'الف'), ('ب', 'ب'), ('پ', 'پ'), ('ت', 'ت'), ('ث', 'ث'),
-		('ج', 'ج'), ('چ', 'چ'), ('ح', 'ح'), ('خ', 'خ'), ('د', 'د'),
-		('ذ', 'ذ'), ('ر', 'ر'), ('ز', 'ز'), ('ژ', 'ژ'), ('س', 'س'),
-		('ش', 'ش'), ('ص', 'ص'), ('ض', 'ض'), ('ط', 'ط'), ('ظ', 'ظ'),
-		('ع', 'ع'), ('غ', 'غ'), ('ف', 'ف'), ('ک', 'ک'), ('گ', 'گ'),
-		('ل', 'ل'), ('م', 'م'), ('ن', 'ن'), ('و', 'و'), ('ه', 'ه'),
-		('ی', 'ی'))
+	number_plate_1 = models.CharField(max_length=2, default=00, validators=[NUMERIC])
+	persian_letters = [
+		('01', 'الف'), ('02', 'ب'), ('03', 'پ'), ('04', 'ت'),
+		('05', 'ث'), ('06', 'ج'), ('07', 'چ'), ('08', 'ح'),
+		('09', 'خ'), ('10', 'د'), ('11', 'ذ'), ('12', 'ر'),
+		('13', 'ز'), ('14', 'ژ'), ('15', 'س'), ('16', 'ش'),
+		('17', 'ص'), ('18', 'ض'), ('19', 'ط'), ('20', 'ظ'),
+		('21', 'ع'), ('22', 'غ'), ('23', 'ف'), ('24','ق'),
+		('24', 'ک'), ('25', 'گ'), ('26', 'ل'), ('27', 'م'),
+		('28', 'ن'), ('29', 'و'), ('30', 'ه'), ('31', 'ی')]
 
-	number_plate_letter = models.CharField(max_length=3, default='الف', choices=persian_letters)
-	number_plate_2 = models.CharField(max_length=2, default=00, validators=[NUMERIC])
+	number_plate_letter = models.CharField(max_length=2, default='000', choices=persian_letters)
+	number_plate_2 = models.CharField(max_length=3, default=00, validators=[NUMERIC])
 	number_plate_iran = models.CharField(max_length=2, default=00, validators=[NUMERIC])
 
 	truck_sizes = (
 		('MOT', 'Motorbike - موتور'),
 		('CAR', 'Car - سواری'), ('VAN', 'Vanet peykan - وانت پیکان'), ('NIS', 'Nissan - نیسان'),
 		('ISU', 'ISUZU - ایسوزو'), ('KHA', 'KHAVAR - خاور'), ('BUD', 'BUDSAN - بادسان'),
-		('TAK', 'TAK - تک'), ('JOF', 'JOFT - جفت'), ('20F', '20 Foot container - کانتینر ۲۰ فوت'),
-		('40F', '40 Foot container - کانتینر ۴۰ فوت'), ('40H', '40 Foot HIGH container  - کانتینر ۴۰ فوت های'),
+		('TAK', 'TAK - تک'), ('JOF', 'JOFT - جفت'), ('20F', '20ft container - کانتینر ۲۰ فوت'),
+		('40F', '40ft container - کانتینر ۴۰ فوت'), ('40H', '40ft hi container  - کانتینر ۴۰ فوت های'),
 		('FBT', 'Flat bed trailer - تریلی کفی'),
 		('SRT', 'Side raised trailer - تریلی بغلدار'), ('TRT', 'Transit trailer  - تریلی ترانزیتی')
 	)
@@ -160,7 +161,7 @@ class Driver(models.Model):
 
 
 class Order(models.Model):
-	sys_order_no = models.PositiveIntegerField()
+	sys_order_no = models.PositiveIntegerField(null=True, blank=True)
 	warehouse = models.ForeignKey(Warehouse, on_delete=models.SET_NULL, null=True, default=DEFAULT_WH_ID)
 	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, related_name='orders')
 	# customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
@@ -170,16 +171,16 @@ class Order(models.Model):
 	permit_type = models.CharField(max_length=10, choices=permit_choices, default='ON', null=False)
 	permit_number = models.CharField(max_length=30, default="0", blank=False, unique=False, null=True)
 	notes = models.TextField(max_length=2048, default="some notes", blank=True)
-	origin_destination = models.CharField(max_length=30, default="0", blank=False, null=True)
-	billway_number = models.CharField(max_length=30, default="0", blank=False, unique=False, null=True)
+	origin_destination = models.CharField(max_length=30, default="0", blank=True, null=True)
+	billway_number = models.CharField(max_length=30, default="0", blank=True, unique=False, null=True)
 	transport_company = models.CharField(max_length=256, default="company name", blank=True)
-	sender_receiver = models.CharField(max_length=50, default="0", blank=False, unique=False, null=True)
-	receiving_customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True,
+	sender_receiver = models.CharField(max_length=50, default="0", blank=True, unique=False, null=True)
+	receiving_customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True,
 	                                       related_name='receiving_customer')  # used only for transfer
 	status_choices = (('OFF', 'Off - inactive'), ('ON', 'On - active'))
-	status = models.CharField(max_length=20, choices=status_choices, default='ON')
+	status = models.CharField(max_length=20, choices=status_choices, default='ON', blank=True)
 	timestamp_created = models.DateTimeField(auto_now_add=True)
-	driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True)
+	driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True)
 
 	def __str__(self):
 		return self.order_type + " : " + self.customer.__str__() + " : " + self.status + " <" + self.timestamp_created.__str__() + ">"
@@ -202,7 +203,7 @@ class Inventory(models.Model):
 	count = models.PositiveIntegerField()
 
 	def __str__(self):
-		return "<" + self.warehouse.__str__() + " : " + self.customer.__str__() + + " : " + self.product.__str__() + " = " + self.count.__str__() + ">"
+		return "<" + self.warehouse.__str__() + " : " + self.customer.__str__() + " : " + self.product.__str__() + " = " + self.count.__str__() + ">"
 
 
 def MelliCodeIsValid(input):

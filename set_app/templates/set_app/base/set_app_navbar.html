@@ -34,7 +34,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
-                            Wareohouse
+                            Warehouse
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{% url 'set_app:warehouse_list' %}">List</a>
@@ -70,7 +70,7 @@
                             Order Action
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'set_app:order_in_create' %}">Inbound</a>
+                            <a class="dropdown-item" href="{% url 'set_app:order_create' %}">Inbound</a>
                             <a class="dropdown-item" href="">Outbound</a>
                             <a class="dropdown-item" href="">Transfer</a>
                         </div>
@@ -82,6 +82,7 @@
                             Reports
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'set_app:inventory' %}">Inventory</a>
                             <a class="dropdown-item" href="">Kardex</a>
                             <a class="dropdown-item" href="">Etc 1</a>
                             <a class="dropdown-item" href="">Etc 2</a>

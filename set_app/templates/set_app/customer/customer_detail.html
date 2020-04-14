@@ -1,4 +1,4 @@
-{% extends "set_app/set_app_base.html" %}
+{% extends "set_app/base/set_app_base.html" %}
 
 {% block body_block %}
     <div class="jumbotron">
@@ -14,12 +14,6 @@
         <p>Address: {{ customer_detail.address }}</p>
         <p>Postcode: {{ customer_detail.postcode }}</p>
         <p>Warehouse: {{ customer_detail.warehouse }}</p>
-
-{% comment %}        <h3>Customers:</h3>
-    {% for customer in customer_detail.customers.all %}
-        <p>{{ customer.entity }} named {{ customer.first_name }} {{ customer.lasy_name }} {{ customer.company_name }}</p>
-    {% endfor %}{% endcomment %}
-    
     </div>
     <div class="container">
         <p><a class="btn btn-warning" href="{% url 'set_app:customer_update' pk=customer_detail.pk %}">Update</a>
