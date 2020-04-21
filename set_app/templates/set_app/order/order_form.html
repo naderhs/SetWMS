@@ -1,5 +1,7 @@
 {% extends "set_app/base/set_app_base.html" %}
 {% load static %}
+{#{% load jalali_tags %}#}
+
 
 {% block body_block %}
     <h3>
@@ -66,6 +68,8 @@
                 <textarea name="notes" style="width:100%;" rows="3" maxlength="2048" id="id_notes">some notes</textarea>
             </div>
         </div>
+{#        <p>{{ order_form.timestamp_created|to_jalali:'%y/%m/%d _ %H:%M:%S' }}</p>#}
+
         {% if order_form.order_type.value != 'TR' %}
             <hr>
             <div class="form-row">

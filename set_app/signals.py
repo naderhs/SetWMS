@@ -1,9 +1,9 @@
 from django.db.models.signals import post_save
 
-from set_app.models import Transaction, Inventory
+from set_app.models import OrderItem, Inventory
 from django.dispatch import receiver
 
-@receiver(post_save, sender=Transaction)
+@receiver(post_save, sender=OrderItem)
 def create_inventory(sender, instance, created, **kwargs):
 
 # warehouse, customer, product, count
@@ -51,9 +51,8 @@ def create_inventory(sender, instance, created, **kwargs):
 # post_save.connect(create_inventory, sender=Transaction)
 
 
-@receiver(post_save, sender=Transaction)
+@receiver(post_save, sender=OrderItem)
 def update_inventory(sender, instance, created, **kwargs):
 	if created == False:
 		print('update_inventory called! ===========')
 
-# post_save.connect(update_inventory, sender=Transaction)

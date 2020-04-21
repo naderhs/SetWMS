@@ -1,0 +1,61 @@
+{% extends "set_app/base/set_app_base.html" %}
+
+
+{% block body_block %}
+
+
+    <h2>Kardex report</h2>
+
+
+
+    <div class="row">
+        <div class="col">
+            <div class="card card-body">
+                <form method="get">
+                    {{ kardex_filter.form }}
+                    <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="card card-body">
+                <form method="POST" action={% url 'set_app:inventory' dt='CSV' %}>
+                    {% csrf_token %}
+                    <input class="btn btn-warning btn-sm" type="submit" value="Export CSV" formaction={% url 'set_app:kardex' dt='CSV' %}>
+                    <input class="btn btn-warning btn-sm" type="submit" value="Export PDF" formaction={% url 'set_app:kardex' dt='PDF' %}>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-sm">
+        {#  line number, timestamp, product code, product barcode, description, permit no, order number, in no, out no., count.  #}
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Date</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Product code</th>
+            <th scope="col">Product barcode</th>
+            <th scope="col">Product name</th>
+            <th scope="col">Permit no</th>
+            <th scope="col">Order type</th>
+            <th scope="col">Order no</th>
+            <th scope="col">Count</th>
+        </tr>
+        <tbody>
+        {% for kardex_item in kardex_filtered_list %}
+            <tr>
+                <td scope="row">{{ forloop.counter }}</td>
+                <td>{{ kardex_item.timestamp_created|date:"d/m/Y" }}</td>
+                <td>{{ kardex_item.order.customer }}</td>
+                <td>{{ kardex_item.product.code }}</td>
+                <td>{{ kardex_item.product.barcode }}</td>
+                <td>{{ kardex_item.product.name }}</td>
+                <td>{{ kardex_item.order.permit_number }}</td>
+                <td>{{ kardex_item.order.order_type }}</td>
+                <td>{{ kardex_item.order.id }}</td>
+                <td>{{ kardex_item.count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 
 from django.contrib import messages
 from django.shortcuts import render
@@ -9,13 +10,20 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.forms import UserCreationForm
+# from weasyprint import HTML
+from weasyprint import HTML, CSS
+from weasyprint.fonts import FontConfiguration
 
+from SetWMS.settings import STATICFILES_DIRS
 from set_app.forms import *
 from set_app.models import *
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect, get_object_or_404
 from set_app.filters import *
 from django.forms import inlineformset_factory
+
+from django.core.files.storage import FileSystemStorage
+from django.template.loader import render_to_string
 
 # Imports for PDF to work
 from io import BytesIO
@@ -182,11 +190,10 @@ def OrderCreateView(request, pk=-1, ot='IN'):
 	else:
 		order_form = OrderForm(initial={'warehouse_id':WH_ID,'order_type':ot})
 
-	TransactionFormSet = inlineformset_factory(Order, Transaction, fields=['product', 'count'],extra=5)
-	formset = TransactionFormSet()
+	OrderItemFormSet = inlineformset_factory(Order, OrderItem, fields=['product', 'count'], extra=5)
+	formset = OrderItemFormSet()
 
 	driver_form = DriverForm()
-	print("Before request.method == 'POST' ===== ")
 	if request.method == 'POST':
 		data = request.POST.copy()
 		data['warehouse'] = 1
@@ -194,9 +201,7 @@ def OrderCreateView(request, pk=-1, ot='IN'):
 		data['order_type'] = ot
 		order_form = OrderForm(data)
 		driver_form = DriverForm(request.POST)
-		print("Before order_form.is_valid() ===== " + order_form.is_valid().__str__())
 		if order_form.is_valid():
-			print("Inside order_form.is_valid() ===== ")
 			order = order_form.save(False)
 			if ot != 'TR' and driver_form.is_valid():
 				driver = driver_form.save()
@@ -205,10 +210,8 @@ def OrderCreateView(request, pk=-1, ot='IN'):
 				print("driver_form.errors > " + driver_form.errors.__str__())
 				print("driver_form.non_field_errors > " + driver_form.non_field_errors.__str__())
 			order.save()
-			formset = TransactionFormSet(request.POST, instance=order)
-			print("formset.is_valid(): "+ formset.is_valid().__str__())
+			formset = OrderItemFormSet(request.POST, instance=order)
 			if formset.is_valid():
-				print(" inside formset.is_valid() ===== ")
 				formset.save()
 				return redirect('set_app:dashboard')
 		else:
@@ -290,59 +293,80 @@ class DriverCreateView(CreateView):
 
 
 #Reports
-def InventoryView(request):
+def InventoryView(request, dt=None):
 	inv = Inventory.objects.all()
 	inv_filter = InvFilter(request.GET, queryset=inv)
 	inv = inv_filter.qs
 	context = {'inv': inv, 'inv_filter': inv_filter}
+	print("OUT - doc_type = " + dt.__str__())
+
 	if request.method == 'POST':
-		print("Entered POST")
-		print(inv.__str__())
-		print(inv.__len__())
-		response = HttpResponse(content_type='text/csv')
-		writer = csv.writer(response)
-		writer.writerow(['#', 'Customer', 'Product code', 'Product barcode', 'Product name', 'Product description',
-		                 'Product brand', 'Product status', 'Count'])
-		for idx, item in enumerate(inv):
-			writer.writerow([idx+1, item.customer,item.product.code, item.product.barcode,item.product.name,
-			                item.product.description,item.product.brand,item.product.status,item.count])
-		response['Content-Disposition'] = 'attachment; filename="inventory.csv"'
-		return response
+		print("IN - doc_type = " + dt.__str__())
+		if dt == 'CSV':
+			print('making CSV ........')
+			return InventoryToCsvView(inv)
+		elif dt == 'PDF':
+			print('making PDF ........')
+			return InventoryToPdfView(inv)
 	return render(request, 'set_app/reports/inv_report.html', context)
 
-# def InventoryCsvExport(request):
-# 	print(request.POST)
-# 	response = HttpResponse(content_type='text/csv')
-# 	writer = csv.writer(response)
-# 	writer.writerow(['#', 'Customer', 'Product code', 'Product barcode', 'Product name', 'Product description',
-# 	                 'Product brand', 'Product status', 'Count'])
-# 	# for i in items.objects.all().value_list('customr','product'):
-# 	# 	writer.writerow(i)
+def InventoryToCsvView(inv):
+	response = HttpResponse(content_type='text/csv')
+	response['Content-Disposition'] = 'attachment; filename="inventory_'+datetime.now().strftime("%Y%m%d-%H%M")+'.csv"'
+	writer = csv.writer(response)
+	writer.writerow(['#', 'Customer', 'Product code', 'Product barcode', 'Product name',
+	                 'Product brand', 'Product status', 'Count'])
+	for idx, item in enumerate(inv):
+		writer.writerow([idx + 1, item.customer, item.product.code, item.product.barcode, item.product.name,
+		                item.product.brand, item.product.status, item.count])
+	return response
+
+
+def InventoryToPdfView(inv_list):
+	html_string = render_to_string('set_app/print/inv_pdf_template.html', {'inv_list': inv_list})
+	filename = 'inventory_'+datetime.now().strftime("%Y%m%d-%H%M")+'.pdf'
+	html = HTML(string=html_string)
+	css = CSS(STATICFILES_DIRS[0].__str__()+'/css/inv_pdf_template.css')
+	print(css.base_url.__str__())
+	font_config = FontConfiguration()
+	# html.write_pdf(target='/tmp/'+filename,stylesheets=[CSS('set_app/print/inv_pdf_template.css')])
+	html.write_pdf(target='/tmp/'+filename,stylesheets=[css],presentational_hints = True,font_config=font_config)
+
+	fs = FileSystemStorage('/tmp')
+
+	with fs.open(filename) as pdf:
+		response = HttpResponse(pdf, content_type='application/pdf')
+		response['Content-Disposition'] = 'attachment; filename="'+filename+'"'
+		return response
+
+	return response
+
+
+def KardexView(request, dt=None):
+	kardex_list = OrderItem.objects.all()
+	kardex_filter = KardexFilter(request.GET, queryset=kardex_list)
+	kardex_filtered_list = kardex_filter.qs
+	context = {'kardex_filtered_list': kardex_filtered_list, 'kardex_filter': kardex_filter}
+	if request.method == 'POST':
+		if dt == 'CSV':
+			return KardexToCsvView(kardex_filtered_list)
+		elif dt == 'PDF':
+			return InventoryToPdfView(kardex_filtered_list)
+	return render(request, 'set_app/reports/kardex_report.html', context)
+
+def KardexToCsvView(kardex_filtered_list):
+	response = HttpResponse(content_type='text/csv')
+	response['Content-Disposition'] = 'attachment; filename="kardex_'+datetime.now().strftime("%Y%m%d-%H%M")+'.csv"'
+	writer = csv.writer(response)
+	writer.writerow(['#', 'Date', 'Customer', 'Product code', 'Product barcode', 'Product name', 'Permit no',
+	                 'Order type', 'Order no', 'Count'])
+	for idx, item in enumerate(kardex_filtered_list):
+			writer.writerow(
+				[idx + 1, item.order.timestamp_created, item.order.customer, item.product.code, item.product.barcode,
+				 item.product.name, item.order.permit_number, item.order.order_type,  item.order.id, item.count])
+	return response
+
 #
-# 	response['Content-Disposition'] = 'attachment; filename="inventory.csv"'
-# 	return response
-#
-# # PDF code stats here
-# def render_to_pdf(template_src, context_dict={}):
-# 	template = get_template(template_src)
-# 	html = template.render(context_dict)
-# 	result = BytesIO()
-# 	pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-# 	if not pdf.err:
-# 		return HttpResponse(result.getvalue(), content_type='application/pdf')
-# 	return None
-#
-# data = {
-# 	"company": "Dennnis Ivanov Company",
-# 	"address": "123 Street name",
-# 	"city": "Vancouver",
-# 	"state": "WA",
-# 	"zipcode": "98663",
-#
-# 	"phone": "555-555-2345",
-# 	"email": "youremail@dennisivy.com",
-# 	"website": "dennisivy.com",
-# }
 #
 #
 # # Opens up page as PDF

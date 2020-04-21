@@ -1,0 +1,41 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <title>kardex کاردکس</title>
+    <meta name="description" content="stock inventory"/>
+    <meta name="author" content="Setayesh Warehouse انبار ستایش"/>
+</head>
+<body>
+<div class="container">
+    <h3>Kardex report گزارش کاردکس</h3>
+    <table>
+        <tbody>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Product code</th>
+            <th scope="col">Product barcode</th>
+            <th scope="col">Product name</th>
+            <th scope="col">Product brand</th>
+            <th scope="col">Product status</th>
+            <th scope="col">Count</th>
+        </tr>
+        </tbody>
+        <tbody>
+        {% for inv in inv_list %}
+            <tr>
+                <td scope="row">{{ forloop.counter }}</td>
+                <td>{{ inv.customer }}</td>
+                <td>{{ inv.product.code }}</td>
+                <td>{{ inv.product.barcode }}</td>
+                <td>{{ inv.product.name }}</td>
+                <td>{{ inv.product.brand }}</td>
+                <td>{{ inv.product.status }}</td>
+                <td>{{ inv.count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

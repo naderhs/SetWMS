@@ -9,12 +9,14 @@
             <div class="card card-body">
                 <form method="get">
                     {{ inv_filter.form }}
-                    <button class="btn btn-primary" type="submit">Search</button>
-{#                    <a class="btn btn-primary  btn-sm btn-block" href="{% url 'set_app:inventory' %}">Export CSV</a>#}
+                    <button class="btn btn-primary btn-sm" type="submit">Search</button>
                 </form>
-                <form method="POST" action="">
+            </div>
+            <div class="card card-body">
+                <form method="POST" action={% url 'set_app:inventory' dt='CSV' %}>
                     {% csrf_token %}
-                    <input class="btn btn-warning" type="submit" value="Export CSV">
+                    <input class="btn btn-warning btn-sm" type="submit" value="Export CSV" formaction={% url 'set_app:inventory' dt='CSV' %}>
+                    <input class="btn btn-warning btn-sm" type="submit" value="Export PDF" formaction={% url 'set_app:inventory' dt='PDF' %}>
                 </form>
             </div>
         </div>
@@ -27,7 +29,6 @@
             <th scope="col">Product code</th>
             <th scope="col">Product barcode</th>
             <th scope="col">Product name</th>
-            <th scope="col">Product description</th>
             <th scope="col">Product brand</th>
             <th scope="col">Product status</th>
             <th scope="col">Count</th>
@@ -40,7 +41,6 @@
                 <td>{{ inv_item.product.code }}</td>
                 <td>{{ inv_item.product.barcode }}</td>
                 <td>{{ inv_item.product.name }}</td>
-                <td>{{ inv_item.product.description }}</td>
                 <td>{{ inv_item.product.brand }}</td>
                 <td>{{ inv_item.product.status }}</td>
                 <td>{{ inv_item.count }}</td>

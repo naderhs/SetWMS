@@ -48,6 +48,9 @@ urlpatterns = [
 
     # REPORTS
     path('inventory/', views.InventoryView, name='inventory'),
+    path('inventory/<str:dt>/', views.InventoryView, name='inventory'),
+    path('kardex/', views.KardexView, name='kardex'),
+    path('kardex/<str:dt>/', views.KardexView, name='kardex'),
 
     # # Download or view PDF
     # path('customer/pdf_view/', views.CustomerViewPDF.as_view(), name="customer_pdf_view"),

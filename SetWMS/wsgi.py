@@ -13,4 +13,8 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SetWMS.settings')
 
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SetWMS.settings.dev')
+
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SetWMS.settings.production')
+
 application = get_wsgi_application()

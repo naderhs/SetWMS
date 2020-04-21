@@ -96,7 +96,7 @@ def	add_order(wh,cust_list,prod_list,N=10):
 		order_in.driver = add_driver()
 		order_in.save()
 		for i in range(5):
-			trans = Transaction()
+			trans = OrderItem()
 			trans.order = order_in
 			trans.product = prod_list[i]
 			trans.count = random.randrange(100,200)
@@ -118,7 +118,7 @@ def	add_order(wh,cust_list,prod_list,N=10):
 		order_in.driver = add_driver()
 		order_in.save()
 		for i in range(5):
-			trans = Transaction()
+			trans = OrderItem()
 			trans.order = order_in
 			trans.product = prod_list[i]
 			trans.count = random.randrange(20, 50)
@@ -141,7 +141,7 @@ def	add_order(wh,cust_list,prod_list,N=10):
 		order_in.driver = add_driver()
 		order_in.save()
 		for i in range(2):
-			trans = Transaction()
+			trans = OrderItem()
 			trans.order = order_in
 			trans.product = prod_list[i]
 			trans.count = random.randrange(10, 20)

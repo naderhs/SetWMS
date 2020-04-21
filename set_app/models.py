@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 # from django.core.validators import valid
 from django.core.exceptions import ValidationError
-
 from django.core.validators import RegexValidator
 import re
 
@@ -32,9 +31,12 @@ class UserProfileInfo(models.Model):
 	def __str__(self):
 		return self.user.username
 
+# Multilingual TEST =============================
 
 class Warehouse(models.Model):
 	name = models.CharField(max_length=256, default="warehouse name")
+	# name_en = models.CharField(_("Title (English)"),max_length=256, default="warehouse name")
+	# name_pe = models.CharField(_("Title (Persian)"),max_length=256, default="اسم انبار")
 	tel1 = models.CharField(max_length=256, default="XXXXXXXX")
 	tel2 = models.CharField(max_length=256, default="XXXXXXXX")
 	email = models.EmailField()
@@ -47,6 +49,23 @@ class Warehouse(models.Model):
 
 	def get_absolute_url(self):
 		return reverse("set_app:warehouse_detail", kwargs={'pk': self.pk})
+# Multilingual TEST =============================
+
+
+# class Warehouse(models.Model):
+# 	name = models.CharField(max_length=256, default="warehouse name")
+# 	tel1 = models.CharField(max_length=256, default="XXXXXXXX")
+# 	tel2 = models.CharField(max_length=256, default="XXXXXXXX")
+# 	email = models.EmailField()
+# 	address = models.CharField(max_length=512, default="address")
+# 	postcode = models.CharField(max_length=10, default="XXXXXXXXXX")
+# 	timestamp_created = models.DateTimeField(auto_now_add=True)
+#
+# 	def __str__(self):
+# 		return self.name
+#
+# 	def get_absolute_url(self):
+# 		return reverse("set_app:warehouse_detail", kwargs={'pk': self.pk})
 
 
 class StorageTag(models.Model):
@@ -131,7 +150,7 @@ class Driver(models.Model):
 		('09', 'خ'), ('10', 'د'), ('11', 'ذ'), ('12', 'ر'),
 		('13', 'ز'), ('14', 'ژ'), ('15', 'س'), ('16', 'ش'),
 		('17', 'ص'), ('18', 'ض'), ('19', 'ط'), ('20', 'ظ'),
-		('21', 'ع'), ('22', 'غ'), ('23', 'ف'), ('24','ق'),
+		('21', 'ع'), ('22', 'غ'), ('23', 'ف'), ('24', 'ق'),
 		('24', 'ک'), ('25', 'گ'), ('26', 'ل'), ('27', 'م'),
 		('28', 'ن'), ('29', 'و'), ('30', 'ه'), ('31', 'ی')]
 
@@ -186,7 +205,7 @@ class Order(models.Model):
 		return self.order_type + " : " + self.customer.__str__() + " : " + self.status + " <" + self.timestamp_created.__str__() + ">"
 
 
-class Transaction(models.Model):
+class OrderItem(models.Model):
 	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
 	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
 	count = models.IntegerField(default=0, null=False)
@@ -212,3 +231,29 @@ def MelliCodeIsValid(input):
 	check = int(input[9])
 	s = sum([int(input[x]) * (10 - x) for x in range(9)]) % 11
 	return (s < 2 and check == s) or (s >= 2 and check + s == 11)
+
+
+# Multilingual
+# from django.utils.translation import gettext_lazy as _
+# from SetWMS.apps.core import (MultilingualCharField, MultilingualTextField, )
+#
+#
+# class Idea(models.Model):
+# 	title = MultilingualCharField(_("Title"), max_length=200,)
+# 	content = MultilingualTextField(_("Content"),)
+#
+# 	class Meta:
+# 		verbose_name = _("Idea")
+# 		verbose_name_plural = _("Ideas")
+#
+# 	def __str__(self):
+# 		return self.title
+
+# Accounting
+# def Account
+#
+#
+#
+#
+#
+# def
