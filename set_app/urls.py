@@ -34,6 +34,8 @@ urlpatterns = [
     # path('order_create/<int:pk>', views.OrderCreateView, name='order_create'),
     path('order_create/', views.OrderCreateView, name='order_create'),
     path('order_create/<int:pk>/<str:ot>/', views.OrderCreateView, name='order_create'),
+    path('order_detail/<int:pk>/', views.OrderDetailView, name='order_detail'),
+    path('order_invalidate/<int:pk>/', views.OrderInvalidateView, name='order_invalidate'),
 
     # Product URL patters
     # path('products/', views.ProductListView.as_view(), name='product_list'),

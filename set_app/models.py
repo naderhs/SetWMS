@@ -42,7 +42,7 @@ class Warehouse(models.Model):
 	email = models.EmailField()
 	address = models.CharField(max_length=512, default="address")
 	postcode = models.CharField(max_length=10, default="XXXXXXXXXX")
-	timestamp_created = models.DateTimeField(auto_now_add=True)
+	created = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
 		return self.name
@@ -59,7 +59,7 @@ class Warehouse(models.Model):
 # 	email = models.EmailField()
 # 	address = models.CharField(max_length=512, default="address")
 # 	postcode = models.CharField(max_length=10, default="XXXXXXXXXX")
-# 	timestamp_created = models.DateTimeField(auto_now_add=True)
+# 	created = models.DateTimeField(auto_now_add=True)
 #
 # 	def __str__(self):
 # 		return self.name
@@ -100,7 +100,7 @@ class Customer(models.Model):
 	address = models.CharField(max_length=512, default="address")
 	postcode = models.CharField(max_length=10, default="XXXXXXXXXX")
 	storage_tags = models.ManyToManyField(StorageTag)
-	timestamp_created = models.DateTimeField(auto_now_add=True)
+	created = models.DateTimeField(auto_now_add=True)
 	warehouse = models.ForeignKey(Warehouse, related_name='customers', on_delete=models.CASCADE, default=DEFAULT_WH_ID)
 
 	def clean(self):
@@ -129,7 +129,7 @@ class Product(models.Model):
 	name = models.CharField(max_length=128, default="product name", blank=False)
 	description = models.CharField(max_length=512, default="some description", blank=True)
 	brand = models.CharField(max_length=128, default="product brand")
-	timestamp_created = models.DateTimeField(auto_now_add=True)
+	created = models.DateTimeField(auto_now_add=True)
 	status_choices = (('OFF', 'Off - inactive'), ('ON', 'On - active'))
 	status = models.CharField(max_length=20, choices=status_choices, default='ON')
 
@@ -168,7 +168,7 @@ class Driver(models.Model):
 		('SRT', 'Side raised trailer - تریلی بغلدار'), ('TRT', 'Transit trailer  - تریلی ترانزیتی')
 	)
 	truck_size = models.CharField(max_length=100, choices=truck_sizes, default='ON')
-	timestamp_created = models.DateTimeField(auto_now_add=True)
+	created = models.DateTimeField(auto_now_add=True)
 
 	def clean(self):
 		super().clean()
@@ -198,18 +198,19 @@ class Order(models.Model):
 	                                       related_name='receiving_customer')  # used only for transfer
 	status_choices = (('OFF', 'Off - inactive'), ('ON', 'On - active'))
 	status = models.CharField(max_length=20, choices=status_choices, default='ON', blank=True)
-	timestamp_created = models.DateTimeField(auto_now_add=True)
+	invalidated = models.DateTimeField(null=True)
+	created = models.DateTimeField(auto_now_add=True)
 	driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True)
 
 	def __str__(self):
-		return self.order_type + " : " + self.customer.__str__() + " : " + self.status + " <" + self.timestamp_created.__str__() + ">"
+		return self.order_type + " : " + self.customer.__str__() + " : " + self.status + " <" + self.created.__str__() + ">"
 
 
 class OrderItem(models.Model):
 	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
 	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
 	count = models.IntegerField(default=0, null=False)
-	timestamp_created = models.DateTimeField(auto_now_add=True)
+	created = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
 		return self.order.__str__() + " : " + self.product.__str__() + " <" + self.count.__str__() + ">"
@@ -219,10 +220,24 @@ class Inventory(models.Model):
 	warehouse = models.ForeignKey(Warehouse, on_delete=models.SET_NULL, null=True)
 	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
 	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
-	count = models.PositiveIntegerField()
+	total = models.PositiveIntegerField()
 
 	def __str__(self):
-		return "<" + self.warehouse.__str__() + " : " + self.customer.__str__() + " : " + self.product.__str__() + " = " + self.count.__str__() + ">"
+		return "<" + self.warehouse.__str__() + " : " + self.customer.__str__() + " : " + self.product.__str__() + " = " + self.total.__str__() + ">"
+
+
+class Kardex(models.Model):
+	warehouse = models.ForeignKey(Warehouse, on_delete=models.SET_NULL, null=True, default=1)
+	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+	order_item = models.ForeignKey(OrderItem, on_delete=models.SET_NULL, null=True)
+	change = models.IntegerField()
+	total = models.PositiveIntegerField()
+	created = models.DateTimeField(auto_now_add=True)
+	invalidated = models.DateTimeField(null=True)
+
+def __str__(self):
+	return "<" + self.id.__str__() + " : " + self.order_item.__str__() + ">"
 
 
 def MelliCodeIsValid(input):

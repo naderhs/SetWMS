@@ -17,6 +17,7 @@
         {% else %}
         <input type="submit" class="btn btn-warning" value="Update">
         {% endif %}
+        <a href="{% url 'set_app:dashboard' %}" class="btn btn-danger" role="button">Cancel</a>
     </form>
 
 {% endblock %}

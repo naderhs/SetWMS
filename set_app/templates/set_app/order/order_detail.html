@@ -1,0 +1,127 @@
+{% extends "set_app/base/set_app_base.html" %}
+
+{% block body_block %}
+    <div class="container">
+        <h3>Order details:</h3>
+        <div class="row">
+            <div class="col"><b>Order id: </b>{{ order.id }}</div>
+            <div class="col"><b>Status: </b>{{ order.get_status_display }}</div>
+            <div class="col"><b>Order type: </b>{{ order.get_order_type_display }}</div>
+            <div class="col"><b>TS: </b>{{ order.created|date:"d/m/Y G:i" }}</div>
+        </div>
+        <div class="row">
+            <div class="col"><b>Customer: </b>{{ order.customer }}</div>
+            <div class="col"><b>Warehouse: </b>{{ order.warehouse.name }}</div>
+            <div class="col"><b>Permit type: </b>{{ order.get_permit_type_display }}</div>
+            <div class="col"><b>Permit no: </b>{{ order.permit_number }}</div>
+        </div>
+        <div class="row">
+            {% if order.order_type != 'TR' %}
+                {% if order.order_type == 'IN' %}
+                    <div class="col"><b>Origin: </b>{{ order.origin_destination }}</div>
+                    <div class="col"><b>Sender: </b>{{ order.sender_receiver }}</div>
+                {% else %}
+                    <div class="col"><b>Destination: </b>{{ order.origin_destination }}</div>
+                    <div class="col"><b>Receiver: </b>{{ order.sender_receiver }}</div>
+                {% endif %}
+                <div class="col"><b>Billway no: </b>{{ order.billway_number }}</div>
+                <div class="col"><b>Transport co: </b>{{ order.transport_company }}</div>
+            {% else %}
+                <div class="col"><b>Receiving customer: </b>{{ order.receiving_customer }}</div>
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col"><b>Notes: </b>{{ order.notes }}</div>
+        </div>
+    </div>
+    {% if order.order_type != 'TR' %}
+        <hr>
+        <div class="container">
+        <h3>Driver details:</h3>
+        <div class="row">
+            <div class="col"><b>Driver id: </b>{{ order.driver.id }}</div>
+            <div class="col"><b>Melli code: </b>{{ order.driver.melli_code }}</div>
+            <div class="col"><b>Driver code: </b>{{ order.driver.driver_code }}</div>
+            <div class="col"><b>TS: </b>{{ order.created|date:"d/m/Y G:i" }}</div>
+        </div>
+        <div class="row">
+            <div class="col"><b>First name: </b>{{ order.driver.first_name }}</div>
+            <div class="col"><b>Last name: </b>{{ order.driver.last_name }}</div>
+            <div class="col"><b>Tel: </b>{{ order.driver.tel1 }}</div>
+            <div class="col"><b>Truck size: </b>{{ order.driver.get_truck_size_display }}</div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p><b>Plate no: </b>
+                <p dir="rtl">{{ order.driver.number_plate_1 }} {{ order.driver.get_number_plate_letter_display }} {{ order.driver.number_plate_2 }}</p>
+                <p dir="rtl">ایران - {{ order.driver.number_plate_iran }} </p>
+            </div>
+        </div>
+    {% endif %}
+    <hr>
+    <div class="container">
+        <h3>Order items:</h3>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Product id</th>
+                <th scope="col">Product code</th>
+                <th scope="col">Product barcode</th>
+                <th scope="col">Product name</th>
+                <th scope="col">Product brand</th>
+                <th scope="col">Product status</th>
+                <th scope="col">Count</th>
+            </tr>
+            </thead>
+            {% for ot in order_items %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td><a href={% url 'set_app:product_update' pk=ot.product.id %}>{{ ot.product.id }}</a></td>
+                    <td>{{ ot.product.code }}</td>
+                    <td>{{ ot.product.barcode }}</td>
+                    <td>{{ ot.product.name }}</td>
+                    <td>{{ ot.product.brand }}</td>
+                    <td>{{ ot.product.status }}</td>
+                    <td>{{ ot.count }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <hr>
+    <div class="container">
+
+    {% if order.status == 'ON' %}
+        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                data-target="#delete-dialog-{{ order.id }}">Invalidate
+        </button>
+    {% endif %}
+    <a class="btn btn-danger btn-sm" type="submit"
+       href={% url 'set_app:customer_more_detail' pk=order.customer.id %}>Cancel</a>
+
+
+    <div class="modal fade" id="delete-dialog-{{ order.id }}" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to invalidate order? {{ order.id }}
+                </div>
+                <div class="modal-footer">
+                    <form action="{% url 'set_app:order_invalidate' pk=order.id %}"
+                          method="post">{% csrf_token %}
+                        <button type="submit" class="btn btn-warning">Invalidate</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -10,13 +10,18 @@
                 <form method="get">
                     {{ inv_filter.form }}
                     <button class="btn btn-primary btn-sm" type="submit">Search</button>
-                </form>
-            </div>
-            <div class="card card-body">
-                <form method="POST" action={% url 'set_app:inventory' dt='CSV' %}>
-                    {% csrf_token %}
-                    <input class="btn btn-warning btn-sm" type="submit" value="Export CSV" formaction={% url 'set_app:inventory' dt='CSV' %}>
-                    <input class="btn btn-warning btn-sm" type="submit" value="Export PDF" formaction={% url 'set_app:inventory' dt='PDF' %}>
+                    <input class="btn btn-warning btn-sm" type="submit" value="Export CSV"
+                           formaction={% url 'set_app:inventory' dt='CSV' %}>
+                    <input class="btn btn-warning btn-sm" type="submit" value="Export PDF"
+                           formaction={% url 'set_app:inventory' dt='PDF' %}>
+
+                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                            data-target="#email-dialog-EmailCSV">Email CSV
+                    </button>
+                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                            data-target="#email-dialog-EmailPDF">Email PDF
+                    </button>
+
                 </form>
             </div>
         </div>
@@ -31,7 +36,7 @@
             <th scope="col">Product name</th>
             <th scope="col">Product brand</th>
             <th scope="col">Product status</th>
-            <th scope="col">Count</th>
+            <th scope="col">Total</th>
         </tr>
         <tbody>
         {% for inv_item in inv %}
@@ -43,10 +48,58 @@
                 <td>{{ inv_item.product.name }}</td>
                 <td>{{ inv_item.product.brand }}</td>
                 <td>{{ inv_item.product.status }}</td>
-                <td>{{ inv_item.count }}</td>
+                <td>{{ inv_item.total }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="modal fade" id="email-dialog-EmailCSV" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Email CSV dailog</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Enter email to send to:
+                </div>
+                <div class="modal-footer">
+                    <form action="{% url 'set_app:inventory' dt='EmailCSV' %}"
+                          method="post">{% csrf_token %}
+                        <button type="submit" class="btn btn-warning">Send</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="email-dialog-EmailPDF" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Email PDF dailog</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Enter email to send to:
+                </div>
+                <div class="modal-footer">
+                    <form action="{% url 'set_app:inventory' dt='EmailPDF' %}"
+                          method="post">{% csrf_token %}
+                        <button type="submit" class="btn btn-warning">Send</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

@@ -73,7 +73,7 @@
                 <h5>Other</h5>
                 <hr>
                 <p>Melli Code: <span style="color:darkgoldenrod;">{{ customer.melli_code }}</span></p>
-                <p>TS: <span style="color:darkgoldenrod;">{{ customer.timestamp_created }}</span></p>
+                <p>TS: <span style="color:darkgoldenrod;">{{ customer.created }}</span></p>
             </div>
         </div>
     </div>
@@ -112,13 +112,13 @@
         {% for order in orders %}
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td>{{ order.id }}</td>
+                <td><a href={% url 'set_app:order_detail' pk=order.id %}>{{ order.id }}</a></td>
                 <td>{{ order.order_type }}</td>
                 <td>{{ order.permit_type }}</td>
                 <td>{{ order.permit_number }}</td>
                 <td>{{ order.notes }}</td>
                 <td>{{ order.status }}</td>
-                <td>{{ order.timestamp_created }}</td>
+                <td>{{ order.created }}</td>
             </tr>
         {% endfor %}
         </tbody>

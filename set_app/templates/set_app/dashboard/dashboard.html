@@ -56,12 +56,12 @@
                     <tbody>
                     {% for order in orders %}
                         <tr>
-                            <td>{{ order.id }}</td>
+                            <td><a href={% url 'set_app:order_detail' pk=order.id %}>{{ order.id }}</a></td>
                             <td>{{ order.order_type }}</td>
-                            <td>{{ order.warehouse }}</td>
-                            <td>{{ order.customer }}</td>
+                            <td><a href={% url 'set_app:warehouse_detail' pk=order.warehouse.pk %}>{{ order.warehouse }}</a></td>
+                            <td><a href={% url 'set_app:customer_more_detail' pk=order.customer.pk %}>{{ order.customer }}</a></td>
                             <td>{{ order.permit_type }}:{{ order.permit_number }}</td>
-                            <td>{{ order.timestamp_created|date:"d/m/y H:i" }}</td>
+                            <td>{{ order.created|date:"d/m/y H:i" }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -73,11 +73,3 @@
 
 {% endblock %}
 
-{#	order_type#}
-{#	warehouse#}
-{#	customer#}
-{#	permit_type = models.CharField(max_length=10, choices=permit_choices, default='ON', null=False)#}
-{#	permit_number = models.CharField(max_length=30, default="product code", blank=False, unique=False, null=True)#}
-{#	status_choices = (('OFF', 'Off - inactive'), ('ON', 'On - active'))#}
-{#	status = models.CharField(max_length=20, choices=status_choices, default='ON')#}
-{#	timestamp_created = models.DateTimeField(auto_now_add=True, null=False)#}

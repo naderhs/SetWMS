@@ -2,7 +2,7 @@
 <head>
     <meta charset="utf-8">
     <title>kardex کاردکس</title>
-    <meta name="description" content="stock inventory"/>
+    <meta name="description" content="stock kardex"/>
     <meta name="author" content="Setayesh Warehouse انبار ستایش"/>
 </head>
 <body>
@@ -13,25 +13,31 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Customer</th>
+            <th scope="col">DateTime</th>
+            <th scope="col">Order no</th>
+            <th scope="col">Invalidated</th>
+            <th scope="col">Permit no</th>
             <th scope="col">Product code</th>
             <th scope="col">Product barcode</th>
             <th scope="col">Product name</th>
-            <th scope="col">Product brand</th>
-            <th scope="col">Product status</th>
-            <th scope="col">Count</th>
+            <th scope="col">Change</th>
+            <th scope="col">Total</th>
         </tr>
         </tbody>
         <tbody>
-        {% for inv in inv_list %}
+        {% for kardex in kardex_filtered_list %}
             <tr>
                 <td scope="row">{{ forloop.counter }}</td>
-                <td>{{ inv.customer }}</td>
-                <td>{{ inv.product.code }}</td>
-                <td>{{ inv.product.barcode }}</td>
-                <td>{{ inv.product.name }}</td>
-                <td>{{ inv.product.brand }}</td>
-                <td>{{ inv.product.status }}</td>
-                <td>{{ inv.count }}</td>
+                <td>{{ kardex.customer }}</td>
+                <td>{{ kardex.customer.created|date:"d/m/Y G:i" }}</td>
+                <td>{{ kardex.order_item.order.id }}</td>
+                <td>{{ kardex.invalidated|date:"d/m/Y G:i" }}</td>
+                <td>{{ kardex.order_item.order.permit_number }}</td>
+                <td>{{ kardex.product.code }}</td>
+                <td>{{ kardex.product.barcode }}</td>
+                <td>{{ kardex.product.name }}</td>
+                <td>{{ kardex.change }}</td>
+                <td>{{ kardex.total }}</td>
             </tr>
         {% endfor %}
         </tbody>

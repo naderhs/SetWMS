@@ -5,8 +5,8 @@ from django.forms import Textarea
 from set_app import models
 from .widgets import BootstrapDateTimePickerInput
 
-from jalali_date.fields import JalaliDateField, SplitJalaliDateTimeField
-from jalali_date.widgets import AdminJalaliDateWidget, AdminSplitJalaliDateTime
+# from jalali_date.fields import JalaliDateField, SplitJalaliDateTimeField
+# from jalali_date.widgets import AdminJalaliDateWidget, AdminSplitJalaliDateTime
 
 class UserForm(forms.ModelForm):
 	password = forms.CharField(widget=forms.PasswordInput())
@@ -28,7 +28,7 @@ class UserProfileInfoForm(forms.ModelForm):
 # 		fields = '__all__'
 # 		super(WarehouseForm, self).__init__(*args, **kwargs)
 #
-# 		self.fields['timestamp_created'] = SplitJalaliDateTimeField(label=_('date time'),
+# 		self.fields['created'] = SplitJalaliDateTimeField(label=_('date time'),
 # 		                                                    widget=AdminSplitJalaliDateTime
 # 		                                                    # required, for decompress DatetimeField to JalaliDateField and JalaliTimeField
 # 		                                                    )
@@ -45,19 +45,19 @@ class OrderForm(forms.ModelForm):
 		fields = '__all__'
 
 
-	def __init__(self, *args, **kwargs):
-		super(OrderForm, self).__init__(*args, **kwargs)
-		# self.fields['date'] = JalaliDateField(label=_('date'),  # date format is  "yyyy-mm-dd"
-		#                                       widget=AdminJalaliDateWidget  # optional, to use default datepicker
-		#                                       )
-		#
-		# you can added a "class" to this field for use your datepicker!
-		# self.fields['date'].widget.attrs.update({'class': 'jalali_date-date'})
-
-		self.fields['timestamp_created'] = SplitJalaliDateTimeField(label='date time',
-		                                                    widget=AdminSplitJalaliDateTime
-		                                                    # required, for decompress DatetimeField to JalaliDateField and JalaliTimeField
-		                                                    )
+	# def __init__(self, *args, **kwargs):
+	# 	super(OrderForm, self).__init__(*args, **kwargs)
+	# 	# self.fields['date'] = JalaliDateField(label=_('date'),  # date format is  "yyyy-mm-dd"
+	# 	#                                       widget=AdminJalaliDateWidget  # optional, to use default datepicker
+	# 	#                                       )
+	# 	#
+	# 	# you can added a "class" to this field for use your datepicker!
+	# 	# self.fields['date'].widget.attrs.update({'class': 'jalali_date-date'})
+	#
+	# 	self.fields['created'] = SplitJalaliDateTimeField(label='date time',
+	# 	                                                    widget=AdminSplitJalaliDateTime
+	# 	                                                    # required, for decompress DatetimeField to JalaliDateField and JalaliTimeField
+	# 	                                                    )
 
 class ProductForm(forms.ModelForm):
 	class Meta():
@@ -79,8 +79,8 @@ class DriverForm(forms.ModelForm):
 		model = models.Driver
 		fields = '__all__'
 
-class DateForm(forms.Form):
-    date = forms.DateTimeField(
-        input_formats=['%d/%m/%Y %H:%M'],
-        widget=BootstrapDateTimePickerInput()
-    )
+# class DateForm(forms.Form):
+#     date = forms.DateTimeField(
+#         input_formats=['%d/%m/%Y %H:%M'],
+#         widget=BootstrapDateTimePickerInput()
+#     )
