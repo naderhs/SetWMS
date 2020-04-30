@@ -1,0 +1,106 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <title>Order print</title>
+    <meta name="description" content="stock inventory"/>
+    <meta name="author" content="Setayesh Warehouse انبار ستایش"/>
+</head>
+<body>
+<div class="container">
+    {% if order.order_type == 'IN' %}
+        <span style="direction:rtl;text-align:right;float:right;"><b>سقارش# {{ order.id }} | رسید کالا | {{ order.created|date:"d/m/Y G:i" }}</b></span>
+    {% elif order.order_type == 'OU' %}
+        <span style="dir:rtl;"><b>سقارش# {{ order.id }} | ترخیص کالا | {{ order.created|date:"d/m/Y G:i" }}</b></span>
+    {% elif order.order_type == 'TR' %}
+        <span style="dir:rtl;"><b>سقارش# {{ order.id }} | انتقال کالا | {{ order.created|date:"d/m/Y G:i" }}</b></span>
+    {% endif %}
+    <br>
+    <hr>
+    <table>
+        <tbody>
+        <tr>
+            <td style="font-size:10pt;"><u>{{ order.permit_type }}-{{ order.permit_number }}</u></td>
+            <td style="font-size:10pt;"><b>مجوز</b></td>
+            {% if order.order_type == 'IN' %}
+                <td style="font-size:10pt;"><u>{{ order.sender_receiver }}</u></td>
+                <td style="font-size:10pt;"><b>فرستنده</b></td>
+            {% elif order.order_type == 'OU' %}
+                <td style="font-size:10pt;"><u>{{ order.sender_receiver }}</u></td>
+                <td style="font-size:10pt;"><b>گیرنده</b></td>
+            {% elif order.order_type == 'TR' %}
+                <td style="font-size:10pt;"><u>{{ order.receiving_customer }}</u></td>
+                <td style="font-size:10pt;"><b>انتقال گیرنده</b></td>
+            {% endif %}
+            <td style="font-size:10pt;"><u>{{ order.customer }}</u></td>
+            <td style="font-size:10pt;"><b>مشتری</b></td>
+        </tr>
+        {% if order.order_type == 'IN' or order.order_type == 'OU' %}
+            <tr>
+                <td style="font-size:10pt;"><u>{{ order.driver.tel1 }}</u></td>
+                <td style="font-size:10pt;"><b>تلفن</b></td>
+                <td style="font-size:10pt;"><u>{{ order.driver.melli_code }}</u></td>
+                <td style="font-size:10pt;"><b>کد ملی</b></td>
+                <td style="font-size:10pt;"><u>{{ order.driver.first_name }} {{ order.driver.last_name }}</u></td>
+                <td style="font-size:10pt;"><b>راننده</b></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style="font-size:10pt;"><u>ایران - {{ order.driver.number_plate_iran }}</u></td>
+                <td style="font-size:10pt;"><u>
+                    {{ order.driver.number_plate_1 }}{{ order.driver.get_number_plate_letter_display }}{{ order.driver.number_plate_2 }}</u>
+                </td>
+                <td style="font-size:10pt;"><b>پلاک</b></td>
+                <td style="font-size:10pt;"><u>{{ order.driver.get_truck_size_display }}</u></td>
+                <td style="font-size:10pt;"><b>نوع ماشین</b></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td style="font-size:10pt;"><u>{{ order.billway_number }}</u></td>
+                <td style="font-size:10pt;"><b>بارنامه#</b></td>
+                <td style="font-size:10pt;"><u>{{ order.transport_company }}</u></td>
+                <td style="font-size:10pt;"><b>باربری</b></td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <table>
+        <tbody>
+        <tr>
+            <th scope="col">تعداد</th>
+            <th scope="col">اسم کالا</th>
+            <th scope="col">بارکد کالا</th>
+            <th scope="col">کد کالا</th>
+            <th scope="col">#</th>
+        </tr>
+        </tbody>
+        <tbody>
+        {% for order_item in order_item_list %}
+            <tr>
+                <td>{{ order_item.count }}</td>
+                <td>{{ order_item.product.name }}</td>
+                <td>{{ order_item.product.barcode }}</td>
+                <td>{{ order_item.product.code }}</td>
+                <td scope="row">{{ forloop.counter }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <span style="color:blue;font-size:9pt;direction:rtl;text-align:right;float:right;">
+        بیمه کالا در مقابل آتش سوزی و حوادث طبیعی بر عهده مشتری میباشد.
+        <br>
+        ساعات کاری {{ order.warehouse.name }} شنبه تا چهارشنبه ۸ تا ۱۷ و پنجشنبه ۸ تا ۱۲ میباشد
+        <br>
+        پرداخت کلیه هزینه حمل بر عهده مشتری میباشد مگر اینکه قرارداد حمل با انبار منعقد شده باشد.
+        <br>
+        <br>
+        <span style="color:black">امضا انباردار:</span>
+        <br>
+        <br>
+        {% if order.order_type == 'OU' %}
+            <span style="color:black">امضا گیرنده:</span>
+        {% endif %}
+    </span>
+</div>
+</body>
+</html>

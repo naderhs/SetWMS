@@ -1,0 +1,87 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css?family=Pacifico|Source+Sans+Pro:400,700");
+@page {
+    size: A4;
+    margin: 1.5cm;
+
+    @top-right {
+        color: #211af0;
+        font-family: Pacifico;
+        content: '❄ SETAYESH WAREHOUSE انبار ستایش ❄';
+        font-size: 8pt;
+    }
+
+    @top-left {
+        color: #211af0;
+        font-family: Pacifico;
+        content: 'setayesh.wh@gmail.com | 5652 2996, 5653 9387 | setanbar.ir';
+        font-size: 8pt;
+    }
+}
+
+body {
+    background-image: url('../media/background_10pc.png');
+    background-repeat: round;
+    background-size: contain;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
+
+html {
+    color: #14213d;
+    font-family: Pacifico;
+    font-size: 9pt;
+    line-height: 1.4;
+}
+
+html body {
+    margin: 0;
+}
+
+html h1 {
+    color: #1ee494;
+    font-family: Pacifico;
+    font-size: 40pt;
+    margin: 0;
+}
+
+html table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+html table th {
+    border: 1px solid #dddddd;
+    color: #14213d;
+    font-size: 9pt;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+html table td {
+    border: 1px solid #dddddd;
+    padding-top: 1mm;
+    font-size: 8pt;
+    text-align: center;
+}
+
+/*html table td:last-of-type {*/
+/*    color: #0247FE;*/
+/*    font-weight: bold;*/
+/*    font-size: 8pt;*/
+/*    text-align: right;*/
+/*}*/
+
+html table th, html table td {
+    text-align: center;
+}
+
+/*html table th:first-of-type, html table td:first-of-type {*/
+/*    text-align: left;*/
+/*}*/
+
+/*html table th:last-of-type, html table td:last-of-type {*/
+/*    text-align: right;*/
+/*}*/
+

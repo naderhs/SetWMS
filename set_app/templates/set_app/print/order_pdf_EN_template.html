@@ -1,0 +1,74 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <title>Order print</title>
+    <meta name="description" content="stock inventory"/>
+    <meta name="author" content="Setayesh Warehouse انبار ستایش"/>
+</head>
+<body>
+<div class="container">
+    <b>Order# {{ order.id }} | {{ order.get_order_type_display }} | {{ order.created|date:"d/m/Y G:i" }}</b>
+    <hr>
+    {% if order.order_type == 'IN' %}
+        The following goods were received on behalf of <u>{{ order.customer }}</u> from
+        <u>{{ order.sender_receiver }}</u>.
+    {% elif order.order_type == 'OU' %}
+        The following goods were sent on behalf of <u>{{ order.customer }}</u> to
+        <u>{{ order.sender_receiver }}</u>.
+    {% elif order.order_type == 'TR' %}
+        The following goods were transferred on behalf from <u>{{ order.customer }}</u> to
+        <u>{{ order.receiving_customer }}</u>.
+    {% endif %}
+    <br>
+    <b>Permit: </b>{{ order.get_permit_type_display }}-{{ order.permit_number }}
+    <br>
+    {% if order.order_type == 'IN' or order.order_type == 'OU' %}
+        <b>Driver: </b><u>{{ order.driver.first_name }} {{ order.driver.last_name }}</u> | <b>National code: </b>
+        <u>{{ order.driver.melli_code }}</u> |
+        <b>Tel: </b><u>{{ order.driver.tel1 }}</u><br>
+        <b>Truck size: </b><u>{{ order.driver.get_truck_size_display }}</u> |
+        <b>Number plate: </b><u>{{ order.driver.number_plate_1 }}{{ order.driver.get_number_plate_letter_display }}
+        {{ order.driver.number_plate_2 }} IRAN-{{ order.driver.number_plate_iran }}</u><br>
+        <b>Transport co: </b><u>{{ order.transport_company }}</u> | <b>Billway no: </b><u>{{ order.billway_number }}</u>
+    {% endif %}
+
+    <table>
+        <tbody>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product code</th>
+            <th scope="col">Product barcode</th>
+            <th scope="col">Product name</th>
+            <th scope="col">Count</th>
+        </tr>
+        </tbody>
+        <tbody>
+        {% for order_item in order_item_list %}
+            <tr>
+                <td scope="row">{{ forloop.counter }}</td>
+                <td>{{ order_item.product.code }}</td>
+                <td>{{ order_item.product.barcode }}</td>
+                <td>{{ order_item.product.name }}</td>
+                <td>{{ order_item.count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <span style="color:blue ; font-size: 8pt">
+        <ul>
+            <li>Insuring goods stored for damage against fire and natural disasters is the responsibility of the customer.</li>
+            <li>{{ order.warehouse.name }} operating hrs are SET-WED 8AM-5PM, FRI 8AM-12PM </li>
+            <li>All transport costs must be paid by the customer unless the customer has a signed a contract for transport services.</li>
+        </ul>
+    </span>
+    <hr>
+    Warehouse operator signature:
+    <br>
+    <br>
+    {% if order.order_type == 'OU' %}
+        Receiver signature:
+    {% endif %}
+
+</div>
+</body>
+</html>

@@ -96,6 +96,10 @@
                 data-target="#delete-dialog-{{ order.id }}">Invalidate
         </button>
     {% endif %}
+    <a class="btn btn-primary btn-sm" type="submit"
+       href={% url 'set_app:order_detail' pk=order.id pr='PrintEN' %}>Print EN</a>
+    <a class="btn btn-primary btn-sm" type="submit"
+       href={% url 'set_app:order_detail' pk=order.id pr='PrintPE' %}>Print PE</a>
     <a class="btn btn-danger btn-sm" type="submit"
        href={% url 'set_app:customer_more_detail' pk=order.customer.id %}>Cancel</a>
 

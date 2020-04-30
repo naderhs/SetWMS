@@ -247,10 +247,18 @@ def OrderCreateView(request, pk=-1, ot='IN'):
 	return render(request, 'set_app/order/order_form.html', context)
 
 
-def OrderDetailView(request, pk):
+def OrderDetailView(request, pk, pr=None):
 	order = Order.objects.get(id=pk)
 	order_items = OrderItem.objects.filter(order_id=order.id)
 	context = {'order': order, 'order_items': order_items}
+	print('Order detail view called ...')
+
+	if pr == 'PrintEN':
+		return OrderPrintEN(order)
+	elif pr == 'PrintPE':
+		return OrderPrintPE(order)
+
+
 	return render(request, 'set_app/order/order_detail.html', context)
 
 
@@ -263,6 +271,51 @@ def OrderInvalidateView(request, pk):
 	order.save()
 	context = {'pk': pk}
 	return redirect('set_app:order_detail', pk)
+
+
+def OrderPrintEN(order):
+	print('OrderPrintEN called ...')
+	order_item_list = OrderItem.objects.filter(order=order)
+	html_string = render_to_string('set_app/print/order_pdf_EN_template.html', {'order': order, 'order_item_list': order_item_list})
+	filename = 'order_' + order.order_type +'_EN_' + datetime.now().strftime("%Y%m%d-%H%M") + '.pdf'
+	html = HTML(string=html_string)
+	css = CSS(STATICFILES_DIRS[0].__str__() + '/css/order_pdf_EN_template.css')
+	print(css.base_url.__str__())
+	font_config = FontConfiguration()
+	# html.write_pdf(target='/tmp/'+filename,stylesheets=[CSS('set_app/print/inv_pdf_template.css')])
+	html.write_pdf(target='/tmp/' + filename, stylesheets=[css], presentational_hints=True, font_config=font_config)
+
+	fs = FileSystemStorage('/tmp')
+
+	with fs.open(filename) as pdf:
+		response = HttpResponse(pdf, content_type='application/pdf')
+		response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
+		return response
+
+	return response
+
+
+def OrderPrintPE(order):
+	print('OrderPrintPE called ...')
+	order_item_list = OrderItem.objects.filter(order=order)
+	html_string = render_to_string('set_app/print/order_pdf_PE_template.html',
+	                               {'order': order, 'order_item_list': order_item_list})
+	filename = 'order_' + order.order_type + '_PE_' + datetime.now().strftime("%Y%m%d-%H%M") + '.pdf'
+	html = HTML(string=html_string)
+	css = CSS(STATICFILES_DIRS[0].__str__() + '/css/order_pdf_PE_template.css')
+	# print(css.base_url.__str__())
+	font_config = FontConfiguration()
+	# html.write_pdf(target='/tmp/'+filename,stylesheets=[CSS('set_app/print/inv_pdf_template.css')])
+	html.write_pdf(target='/tmp/' + filename, stylesheets=[css], presentational_hints=True, font_config=font_config)
+
+	fs = FileSystemStorage('/tmp')
+
+	with fs.open(filename) as pdf:
+		response = HttpResponse(pdf, content_type='application/pdf')
+		response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
+		return response
+
+	return response
 
 # class ProductListView(ListView):
 # 	context_object_name = 'items'
