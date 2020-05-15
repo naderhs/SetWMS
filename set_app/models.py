@@ -198,7 +198,7 @@ class Order(models.Model):
 	                                       related_name='receiving_customer')  # used only for transfer
 	status_choices = (('OFF', 'Off - inactive'), ('ON', 'On - active'))
 	status = models.CharField(max_length=20, choices=status_choices, default='ON', blank=True)
-	invalidated = models.DateTimeField(null=True)
+	invalidated = models.DateTimeField(blank=True, null=True)
 	created = models.DateTimeField(auto_now_add=True)
 	driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True)
 

@@ -1,4 +1,6 @@
 {% extends "set_app/base/set_app_base.html" %}
+{% load jalali_tags %}
+
 
 {% block body_block %}
     <div class="container">
@@ -7,7 +9,7 @@
             <div class="col"><b>Order id: </b>{{ order.id }}</div>
             <div class="col"><b>Status: </b>{{ order.get_status_display }}</div>
             <div class="col"><b>Order type: </b>{{ order.get_order_type_display }}</div>
-            <div class="col"><b>TS: </b>{{ order.created|date:"d/m/Y G:i" }}</div>
+            <div class="col"><b>TS: </b>{{ order.created|to_jalali:'%y/%m/%d _ %H:%M:%S' }}</div>
         </div>
         <div class="row">
             <div class="col"><b>Customer: </b>{{ order.customer }}</div>
@@ -42,7 +44,7 @@
             <div class="col"><b>Driver id: </b>{{ order.driver.id }}</div>
             <div class="col"><b>Melli code: </b>{{ order.driver.melli_code }}</div>
             <div class="col"><b>Driver code: </b>{{ order.driver.driver_code }}</div>
-            <div class="col"><b>TS: </b>{{ order.created|date:"d/m/Y G:i" }}</div>
+            <div class="col"><b>TS: </b>{{ order.created|to_jalali:'%y/%m/%d _ %H:%M:%S' }}</div>
         </div>
         <div class="row">
             <div class="col"><b>First name: </b>{{ order.driver.first_name }}</div>

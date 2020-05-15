@@ -501,13 +501,22 @@ def KardexToCsvView(kardex_filtered_list):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="kardex_' + datetime.now().strftime("%Y%m%d-%H%M") + '.csv"'
 	writer = csv.writer(response)
-	writer.writerow(['#', 'Customer', 'DateTime', 'Order no', 'invalidated', 'Permit no', 'Product code',
+	writer.writerow(['#', 'Customer', 'TS', 'Order no', 'Order type', 'Invalidated', 'Permit no', 'Product code',
 	                 'Product barcode', 'Product name', 'Count', 'Total'])
 	for idx, item in enumerate(kardex_filtered_list):
-		writer.writerow(
-			[idx + 1, item.customer, item.created, item.order_item.order.id, item.invalidated,
-			 item.order_item.order.permit_number, item.product.code, item.product.barcode, item.product.name,
-			 item.change, item.total])
+		if item.invalidated != None:
+			writer.writerow(
+				[idx + 1, item.customer, datetime2jalali(item.created).strftime('%y/%m/%d _ %H:%M:%S'),
+				 item.order_item.order.id, item.order_item.order.order_type,
+				 datetime2jalali(item.invalidated).strftime('%y/%m/%d _ %H:%M:%S') , item.order_item.order.permit_number, item.product.code,
+				 item.product.barcode, item.product.name, item.change, item.total])
+		else:
+			writer.writerow(
+				[idx + 1, item.customer, datetime2jalali(item.created).strftime('%y/%m/%d _ %H:%M:%S'),
+				 item.order_item.order.id, item.order_item.order.order_type,
+				 '', item.order_item.order.permit_number,
+				 item.product.code,
+				 item.product.barcode, item.product.name, item.change, item.total])
 	return response
 
 
@@ -550,3 +559,7 @@ def KardexToPdfView(kardex_filtered_list):
 # 		content = "attachment; filename=%s" % (filename)
 # 		response['Content-Disposition'] = content
 # 		return response
+from jalali_date import datetime2jalali
+
+def jalali_view(request):
+	jalali_join = datetime2jalali(request.user.date_joined).strftime('%y/%m/%d _ %H:%M:%S')

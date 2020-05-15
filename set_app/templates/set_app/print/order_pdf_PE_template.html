@@ -1,3 +1,5 @@
+{% load jalali_tags %}
+
 <!doctype html>
 <head>
     <meta charset="utf-8">
@@ -8,11 +10,11 @@
 <body>
 <div class="container">
     {% if order.order_type == 'IN' %}
-        <span style="direction:rtl;text-align:right;float:right;"><b>سقارش# {{ order.id }} | رسید کالا | {{ order.created|date:"d/m/Y G:i" }}</b></span>
+        <span style="direction:rtl;text-align:right;float:right;"><b>سقارش# {{ order.id }} | رسید کالا | {{ order.created|to_jalali:'%y/%m/%d _ %H:%M:%S' }}</b></span>
     {% elif order.order_type == 'OU' %}
-        <span style="dir:rtl;"><b>سقارش# {{ order.id }} | ترخیص کالا | {{ order.created|date:"d/m/Y G:i" }}</b></span>
+        <span style="dir:rtl;"><b>سقارش# {{ order.id }} | ترخیص کالا | {{ order.created|to_jalali:'%y/%m/%d _ %H:%M:%S' }}</b></span>
     {% elif order.order_type == 'TR' %}
-        <span style="dir:rtl;"><b>سقارش# {{ order.id }} | انتقال کالا | {{ order.created|date:"d/m/Y G:i" }}</b></span>
+        <span style="dir:rtl;"><b>سقارش# {{ order.id }} | انتقال کالا | {{ order.created|to_jalali:'%y/%m/%d _ %H:%M:%S' }}</b></span>
     {% endif %}
     <br>
     <hr>

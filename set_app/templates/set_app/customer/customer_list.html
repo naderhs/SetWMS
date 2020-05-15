@@ -1,4 +1,5 @@
 {% extends "set_app/base/set_app_base.html" %}
+{% load jalali_tags %}
 
 {% block body_block %}
 
@@ -47,7 +48,7 @@
                     {{ customer.email }}
                 </td>
                 <td>
-                    {{ customer.created|date:"d/m/Y" }}
+                    {{ customer.created|to_jalali:'%y/%m/%d' }}
                 </td>
             </tr>
         {% endfor %}

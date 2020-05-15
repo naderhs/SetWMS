@@ -1,3 +1,5 @@
+{% load jalali_tags %}
+
 <!doctype html>
 <head>
     <meta charset="utf-8">
@@ -13,8 +15,9 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Customer</th>
-            <th scope="col">DateTime</th>
+            <th scope="col">TS</th>
             <th scope="col">Order no</th>
+            <th scope="col">Order Type</th>
             <th scope="col">Invalidated</th>
             <th scope="col">Permit no</th>
             <th scope="col">Product code</th>
@@ -29,9 +32,10 @@
             <tr>
                 <td scope="row">{{ forloop.counter }}</td>
                 <td>{{ kardex.customer }}</td>
-                <td>{{ kardex.customer.created|date:"d/m/Y G:i" }}</td>
+                <td>{{ kardex.order_item.order.created|to_jalali:'%y/%m/%d _ %H:%M:%S' }}</td>
                 <td>{{ kardex.order_item.order.id }}</td>
-                <td>{{ kardex.invalidated|date:"d/m/Y G:i" }}</td>
+                <td>{{ kardex.order_item.order.order_type }}</td>
+                <td>{{ kardex.order_item.order.invalidated|to_jalali:'%y/%m/%d _ %H:%M:%S' }}</td>
                 <td>{{ kardex.order_item.order.permit_number }}</td>
                 <td>{{ kardex.product.code }}</td>
                 <td>{{ kardex.product.barcode }}</td>
